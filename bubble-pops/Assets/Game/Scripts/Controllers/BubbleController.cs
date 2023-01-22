@@ -1,4 +1,6 @@
 using Game.Scripts.Bubble;
+using Game.Scripts.Data.Bubble;
+using Game.Scripts.ScriptableObjects;
 using UnityEngine;
 
 namespace Game.Scripts.Controllers
@@ -7,6 +9,8 @@ namespace Game.Scripts.Controllers
     {
         [SerializeField] private BubbleGridController bubbleGridController;
         [SerializeField] private BubblePool bubblePool;
+        [SerializeField] private BubbleValueSo bubbleValueSo;
+        [SerializeField] private int bubbleValueRange = 5;
 
         public void Initialize()
         {
@@ -27,8 +31,25 @@ namespace Game.Scripts.Controllers
             var gridData = bubbleGridController.GetFreeGridData();
             if (gridData == null) return;
             var bubbleEntity = bubblePool.GetBubbleFromPool();
-            bubbleEntity.transform.position = gridData.Position;
-            bubbleEntity.gameObject.SetActive(true);
+            
+            var bubbleActivationData = new BubbleActivationData(
+                gridData.GridCoordinateData, 
+                gridData.Position,
+                bubbleValueSo.GetSpawnableValue());
+            
+            bubbleEntity.Activate(bubbleActivationData);
+        }
+
+        private int RandomBubbleValue()
+        {
+            var randomMultiplier = Random.Range(1, bubbleValueRange + 1);
+            var value = 2;
+            for (var i = 0; i < randomMultiplier; i++)
+            {
+                value *= 2;
+            }
+
+            return value;
         }
     }
 }

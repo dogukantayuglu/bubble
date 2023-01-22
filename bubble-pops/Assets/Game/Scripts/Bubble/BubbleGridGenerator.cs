@@ -50,16 +50,14 @@ namespace Game.Scripts.Bubble
             var halfColumnInterval = totalColumnInterval * 0.5f;
 
             if (columnCountIsEven)
-            {
                 return (halfColumnInterval - (columnSpaceInterval * 0.5f)) * -1;
-            }
-
+            
             return halfColumnInterval * -1;
         }
 
         private GridData GenerateGridData(int row, int column, Vector2 position)
         {
-            var coordinateData = new CoordinateData(row, column);
+            var coordinateData = new GridCoordinateData(row, column);
             var gridData = new GridData(coordinateData, position, GridOccupationStates.Free);
 
             return gridData;

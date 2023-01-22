@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -590,6 +590,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubbleGridController: {fileID: 2143375434}
   bubblePool: {fileID: 1018333575}
+  bubbleValueSo: {fileID: 11400000, guid: d518199651a38c24092f3874fae61058, type: 2}
+  bubbleValueRange: 5
 --- !u!1 &1584865159
 GameObject:
   m_ObjectHideFlags: 0

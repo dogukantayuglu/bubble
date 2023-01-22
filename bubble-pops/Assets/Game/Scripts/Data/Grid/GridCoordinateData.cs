@@ -1,13 +1,11 @@
-using UnityEngine;
-
 namespace Game.Scripts.Data.Grid
 {
-    public struct CoordinateData
+    public struct GridCoordinateData
     {
         public readonly int Row;
         public readonly int Column;
 
-        public CoordinateData(int row, int column)
+        public GridCoordinateData(int row, int column)
         {
             Row = row;
             Column = column;

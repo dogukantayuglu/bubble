@@ -5,13 +5,13 @@ namespace Game.Scripts.Data.Grid
 {
     public class GridData
     {
-        public readonly CoordinateData CoordinateData;
+        public readonly GridCoordinateData GridCoordinateData;
         public Vector2 Position;
         public GridOccupationStates OccupationState;
 
-        public GridData(CoordinateData coordinateData, Vector2 position, GridOccupationStates occupationState)
+        public GridData(GridCoordinateData gridCoordinateData, Vector2 position, GridOccupationStates occupationState)
         {
-            CoordinateData = coordinateData;
+            GridCoordinateData = gridCoordinateData;
             Position = position;
             OccupationState = occupationState;
         }
