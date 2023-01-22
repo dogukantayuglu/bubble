@@ -28,5 +28,10 @@ namespace Game.Scripts.Bubble
                 _bubblePool.Push(bubbleEntity);
             }
         }
+
+        public BubbleEntity GetBubbleFromPool()
+        {
+            return _bubblePool.Pop();
+        }
     }
 }

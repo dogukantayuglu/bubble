@@ -13,5 +13,22 @@ namespace Game.Scripts.Controllers
             bubblePool.Initialize();
             bubbleGridController.Initialize();
         }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                GenerateBubbleAtEmptyGridPosition();
+            }
+        }
+
+        private void GenerateBubbleAtEmptyGridPosition()
+        {
+            var gridData = bubbleGridController.GetFreeGridData();
+            if (gridData == null) return;
+            var bubbleEntity = bubblePool.GetBubbleFromPool();
+            bubbleEntity.transform.position = gridData.Position;
+            bubbleEntity.gameObject.SetActive(true);
+        }
     }
 }

@@ -244,10 +244,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cd90d9622d2fe54d94a9b0279b87ea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rowCount: 5
+  rowCount: 10
   columnCount: 5
-  yStartPosition: 0
+  yStartPosition: 4
   columnZigzagValue: 0.5
+  columnSpaceInterval: 1
+  rowSpaceInterval: 1
+  xOffset: 0.25
 --- !u!1 &1018333573
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,7 +502,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 1000}
+  m_SizeDelta: {x: 500, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1281472619
 MonoBehaviour:
