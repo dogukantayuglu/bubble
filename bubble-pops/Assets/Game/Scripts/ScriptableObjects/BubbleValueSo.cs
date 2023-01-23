@@ -22,8 +22,7 @@ namespace Game.Scripts.ScriptableObjects
                     return bubbleValueData;
             }
 
-            //TODO: Make bubble value data class and return null here
-            return bubbleValueDataList[0];
+            return null;
         }
     }
 }
