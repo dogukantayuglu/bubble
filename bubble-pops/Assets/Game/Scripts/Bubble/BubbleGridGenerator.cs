@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
 using Game.Scripts.Enums;
 using UnityEngine;
@@ -11,8 +12,6 @@ namespace Game.Scripts.Bubble
         [SerializeField] private int columnCount = 5;
         [SerializeField] private float yStartPosition;
         [SerializeField] private float columnZigzagValue = 0.5f;
-        [SerializeField] private float columnSpaceInterval = 1f;
-        [SerializeField] private float rowSpaceInterval = 1f;
         [SerializeField] private float xOffset = 0.25f;
 
 
@@ -28,11 +27,11 @@ namespace Game.Scripts.Bubble
                 var zigZagMultiplier = i % 2 == 0 ? 1 : 0;
                 var zigZagValue = columnZigzagValue * zigZagMultiplier;
 
-                position.y = yStartPosition - (rowSpaceInterval * i);
+                position.y = yStartPosition - (GameData.BubbleSize * i);
 
                 for (var j = 0; j < columnCount; j++)
                 {
-                    position.x = (j * columnSpaceInterval) + xStartPosition + zigZagValue + xOffset;
+                    position.x = (j * GameData.BubbleSize) + xStartPosition + zigZagValue + xOffset;
                     gridDataList.Add(GenerateGridData(i + 1, j + 1, position));
                 }
 
@@ -46,11 +45,11 @@ namespace Game.Scripts.Bubble
         private float CalculateXStartPosition()
         {
             var columnCountIsEven = columnCount % 2 == 0;
-            var totalColumnInterval = columnCount * columnSpaceInterval;
+            var totalColumnInterval = columnCount * GameData.BubbleSize;
             var halfColumnInterval = totalColumnInterval * 0.5f;
 
             if (columnCountIsEven)
-                return (halfColumnInterval - (columnSpaceInterval * 0.5f)) * -1;
+                return (halfColumnInterval - (GameData.BubbleSize * 0.5f)) * -1;
             
             return halfColumnInterval * -1;
         }

@@ -3,14 +3,16 @@ using DG.Tweening;
 using Game.Scripts.Bubble;
 using Game.Scripts.Data.Bubble;
 using Game.Scripts.Data.Grid;
+using Game.Scripts.Interfaces;
 using Game.Scripts.ScriptableObjects;
 using UnityEngine;
 
 namespace Game.Scripts.Controllers
 {
-    public class BubbleController : MonoBehaviour
+    public class BubbleController : MonoBehaviour, IBubbleBuffer
     {
-        [SerializeField] private BubbleGridController bubbleGridController;
+        public IGridBuffer GridBuffer { get; set; }
+        
         [SerializeField] private BubblePool bubblePool;
         [SerializeField] private BubbleValueSo bubbleValueSo;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
@@ -18,11 +20,9 @@ namespace Game.Scripts.Controllers
         public void Initialize()
         {
             bubblePool.Initialize();
-            bubbleGridController.Initialize();
-            GenerateBubblesForStart();
         }
         
-        private void GenerateBubblesForStart()
+        public void GenerateBubblesForStart()
         {
             var gridDataList = GetInitRowsDataList();
             var sequence = DOTween.Sequence();
@@ -41,11 +41,11 @@ namespace Game.Scripts.Controllers
         {
             var gridDataList = new List<GridData>();
 
-            var gridData = bubbleGridController.GetFreeGridData();
+            var gridData = GridBuffer.GetFreeGridData();
             while (gridData.GridCoordinateData.Row <= 4)
             {
                 gridDataList.Add(gridData);
-                gridData = bubbleGridController.GetFreeGridData();
+                gridData = GridBuffer.GetFreeGridData();
             }
 
             return gridDataList;
@@ -55,12 +55,19 @@ namespace Game.Scripts.Controllers
         {
             var bubbleEntity = bubblePool.GetBubbleFromPool();
             
-            var bubbleActivationData = new BubbleActivationData(
+            var bubbleActivationData = new GridActivationData(
                 gridData.GridCoordinateData, 
                 gridData.Position,
                 bubbleValueSo.GetSpawnableValue());
             
-            bubbleEntity.Activate(bubbleActivationData);
+            bubbleEntity.ActivateOnGrid(bubbleActivationData);
+        }
+
+        public BubbleEntity GetBubbleForPlayer()
+        {
+            var bubbleEntity = bubblePool.GetBubbleFromPool();
+            bubbleEntity.SetBubbleValue(bubbleValueSo.GetSpawnableValue());
+            return bubbleEntity;
         }
     }
 }

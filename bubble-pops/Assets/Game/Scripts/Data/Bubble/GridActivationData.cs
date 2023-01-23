@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Game.Scripts.Data.Bubble
 {
-    public struct BubbleActivationData
+    public struct GridActivationData
     {
         public readonly GridCoordinateData ActivationCoordinateData;
         public readonly Vector2 ActivationPosition;
         public readonly BubbleValueData BubbleValueData;
 
-        public BubbleActivationData(GridCoordinateData activationCoordinateData, Vector2 activationPosition, BubbleValueData bubbleValueData)
+        public GridActivationData(GridCoordinateData activationCoordinateData, Vector2 activationPosition, BubbleValueData bubbleValueData)
         {
             ActivationCoordinateData = activationCoordinateData;
             ActivationPosition = activationPosition;

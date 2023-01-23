@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Game.Scripts.Data.Game;
 using UnityEngine;
 
 namespace Game.Scripts.Bubble
@@ -11,11 +12,12 @@ namespace Game.Scripts.Bubble
         public void Initialize()
         {
             _transform = transform;
+            _transform.localScale = Vector3.zero;
         }
         
         public void PlayActivationAnimation()
         {
-            _transform.DOScale(Vector3.one, activationAnimationDuration);
+            _transform.DOScale(GameData.BubbleSize, activationAnimationDuration);
         }
     }
 }

@@ -18,20 +18,24 @@ namespace Game.Scripts.Bubble
 
         public void Initialize()
         {
-            transform.localScale = Vector3.zero;
             bubbleAnimation.Initialize();
         }
 
-        public void Activate(BubbleActivationData bubbleActivationData)
+        public void ActivateOnGrid(GridActivationData gridActivationData)
         {
-            _value = bubbleActivationData.BubbleValueData.value;
-            spriteRenderer.color = bubbleActivationData.BubbleValueData.color;
-            transform.position = bubbleActivationData.ActivationPosition;
-            valueText.text = $"{bubbleActivationData.BubbleValueData.valueText}";
-            _bubbleCoordinate.Row = bubbleActivationData.ActivationCoordinateData.Row;
-            _bubbleCoordinate.Column = bubbleActivationData.ActivationCoordinateData.Column;
+            SetBubbleValue(gridActivationData.BubbleValueData);
+            transform.position = gridActivationData.ActivationPosition;
+            _bubbleCoordinate.Row = gridActivationData.ActivationCoordinateData.Row;
+            _bubbleCoordinate.Column = gridActivationData.ActivationCoordinateData.Column;
             gameObject.SetActive(true);
             bubbleAnimation.PlayActivationAnimation();
+        }
+
+        public void SetBubbleValue(BubbleValueData bubbleValueData)
+        {
+            _value = bubbleValueData.value;
+            spriteRenderer.color = bubbleValueData.color;
+            valueText.text = $"{bubbleValueData.valueText}";
         }
     }
 }
