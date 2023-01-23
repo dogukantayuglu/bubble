@@ -15,9 +15,10 @@ namespace Game.Scripts.Bubble
             _transform.localScale = Vector3.zero;
         }
         
-        public void PlayActivationAnimation()
+        public void PlayActivationAnimation(bool smallSize = false)
         {
-            _transform.DOScale(GameData.BubbleSize, activationAnimationDuration);
+            var size = smallSize ? GameData.BubbleSize * 0.7f : GameData.BubbleSize;
+            _transform.DOScale(size, activationAnimationDuration);
         }
     }
 }

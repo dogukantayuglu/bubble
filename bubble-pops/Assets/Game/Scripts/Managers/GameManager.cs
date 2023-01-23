@@ -18,6 +18,7 @@ namespace Game.Scripts.Managers
         private void Start()
         {
             bubbleController.GenerateBubblesForStart();
+            playerController.ActivateInitBubbles();
         }
 
         private void InitializeGame()

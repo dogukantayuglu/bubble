@@ -9,26 +9,29 @@ namespace Game.Scripts.Controllers
     {
         public IBubbleBuffer BubbleBuffer { get; set; }
         
-        [SerializeField] private Transform queueStartPosition;
+        [SerializeField] private Transform queueStartTransform;
         [SerializeField] private float horizontalQueueSpace = 0.5f;
         [SerializeField] private int maxQueueCount = 2;
 
-        private Queue<BubbleEntity> _bubblesInQueue;
+        private List<BubbleEntity> _bubblesInQueue;
 
         public void Initialize()
         {
-            _bubblesInQueue = new Queue<BubbleEntity>();
+            _bubblesInQueue = new List<BubbleEntity>();
         }
 
-        public void AddBubbleToQueue()
+        public void ActivateInitBubbles()
         {
-            var freeSlots = maxQueueCount - _bubblesInQueue.Count;
-
-            for (var i = 0; i < freeSlots; i++)
+            for (var i = 0; i < maxQueueCount; i++)
             {
-                _bubblesInQueue.Enqueue(BubbleBuffer.GetBubbleForPlayer());
+                var bubbleEntity = BubbleBuffer.GetBubbleForPlayer();
+                var position = queueStartTransform.position;
+                position.x -= i * horizontalQueueSpace;
+                queueStartTransform.position = position;
+                _bubblesInQueue.Add(bubbleEntity);
+                bubbleEntity.ActivateAtQueue(position, i != 0);
             }
         }
-        
+
     }
 }
