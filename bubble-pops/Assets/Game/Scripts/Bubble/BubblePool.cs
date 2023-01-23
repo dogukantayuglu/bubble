@@ -22,6 +22,7 @@ namespace Game.Scripts.Bubble
             for (var i = 0; i < poolCount; i++)
             {
                 var bubbleEntity = Instantiate(bubbleEntityPrefab, Vector3.zero, Quaternion.identity, poolTransform);
+                bubbleEntity.Initialize();
                 var bubbleGameObject = bubbleEntity.gameObject;
                 bubbleGameObject.SetActive(false);
                 bubbleGameObject.name = $"Bubble {i + 1}";

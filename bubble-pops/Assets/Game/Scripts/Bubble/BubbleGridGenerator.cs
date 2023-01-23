@@ -33,7 +33,7 @@ namespace Game.Scripts.Bubble
                 for (var j = 0; j < columnCount; j++)
                 {
                     position.x = (j * columnSpaceInterval) + xStartPosition + zigZagValue + xOffset;
-                    gridDataList.Add(GenerateGridData(i, j, position));
+                    gridDataList.Add(GenerateGridData(i + 1, j + 1, position));
                 }
 
                 position.x += columnZigzagValue * zigZagMultiplier;
