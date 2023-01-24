@@ -12,10 +12,14 @@ namespace Game.Scripts.Controllers
         }
 
         [SerializeField] private PlayerBubbleHandler playerBubbleHandler;
+        [SerializeField] private AimHandler aimHandler;
+        [SerializeField] private Transform playerCenterTransform;
 
         public void Initialize()
         {
-            playerBubbleHandler.Initialize();
+            var playerCenterPosition = playerCenterTransform.position;
+            playerBubbleHandler.Initialize(playerCenterPosition);
+            aimHandler.Initialize(playerCenterPosition);
         }
         
         public void ActivateInitBubbles()

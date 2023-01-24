@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8633960796988901925}
   - component: {fileID: 2918292052127368545}
   - component: {fileID: 7206970765324538236}
-  - component: {fileID: 7206970765324538234}
+  - component: {fileID: 7769641381137890358}
   m_Layer: 0
   m_Name: Bubble
   m_TagString: Untagged
@@ -116,8 +116,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &7206970765324538234
-BoxCollider:
+--- !u!136 &7769641381137890358
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126,8 +126,9 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7206970766163943244
 GameObject:
