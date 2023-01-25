@@ -990,7 +990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b900d1c23418fe44898059caee13ef38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridController: {fileID: 2143375434}
+  gridDataController: {fileID: 2143375434}
   bubbleController: {fileID: 1379306941}
   playerController: {fileID: 603333108}
 --- !u!1 &1713609290

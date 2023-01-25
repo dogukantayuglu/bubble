@@ -11,13 +11,13 @@ namespace Game.Scripts.Player
         
         [SerializeField] private GhostBubbleEntity ghostBubbleEntityPrefab;
 
-        private IGridBuffer _gridBuffer;
+        private IGridDataProvider _gridDataProvider;
         private GhostBubbleEntity _ghostBubbleEntity;
 
-        public void Initialize(IGridBuffer gridBuffer)
+        public void Initialize(IGridDataProvider gridDataProvider)
         {
             GenerateGhostBubble();
-            _gridBuffer = gridBuffer;
+            _gridDataProvider = gridDataProvider;
         }
 
         private void GenerateGhostBubble()
@@ -28,7 +28,7 @@ namespace Game.Scripts.Player
         
         public void ActivateGhostBubble(RaycastHit hit)
         {
-            var closestGridData = _gridBuffer.GetClosesFreeGridData(hit.point);
+            var closestGridData = _gridDataProvider.GetClosestFreeGridData(hit.point);
             _ghostBubbleEntity.ActivateAtGrid(closestGridData);
         }
         

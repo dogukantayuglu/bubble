@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.Scripts.Controllers
 {
-    public class GridController : MonoBehaviour, IGridBuffer
+    public class GridDataController : MonoBehaviour, IGridDataProvider
     {
         [SerializeField] private BubbleGridGenerator bubbleGridGenerator;
         [SerializeField] private RectTransform gridBackgroundTransform;
@@ -41,7 +41,7 @@ namespace Game.Scripts.Controllers
             return null;
         }
 
-        public GridData GetClosesFreeGridData(Vector2 position)
+        public GridData GetClosestFreeGridData(Vector2 position)
         {
             var closestGridData = GetFreeGridData();
             var closestPosition = closestGridData.Position;

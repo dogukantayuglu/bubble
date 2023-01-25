@@ -17,11 +17,11 @@ namespace Game.Scripts.Controllers
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
 
         private List<BubbleEntity> _bubbleEntitiesOnGrid;
-        private IGridBuffer _gridBuffer;
+        private IGridDataProvider _gridDataProvider;
 
-        public void Initialize(IGridBuffer gridBuffer)
+        public void Initialize(IGridDataProvider gridDataProvider)
         {
-            _gridBuffer = gridBuffer;
+            _gridDataProvider = gridDataProvider;
             _bubbleEntitiesOnGrid = new List<BubbleEntity>();
             bubblePool.Initialize();
         }
@@ -46,12 +46,12 @@ namespace Game.Scripts.Controllers
         {
             var gridDataList = new List<GridData>();
 
-            var gridData = _gridBuffer.GetFreeGridData();
+            var gridData = _gridDataProvider.GetFreeGridData();
             while (gridData.GridCoordinateData.Row <= 4)
             {
                 gridDataList.Add(gridData);
                 gridData.OccupationState = GridOccupationStates.Occupied;
-                gridData = _gridBuffer.GetFreeGridData();
+                gridData = _gridDataProvider.GetFreeGridData();
             }
 
             return gridDataList;

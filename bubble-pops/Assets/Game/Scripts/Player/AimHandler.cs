@@ -78,7 +78,7 @@ namespace Game.Scripts.Player
             lineRenderer.SetPosition(1, hit.point);
             lineRenderer.SetPosition(2, hit.point);
             _reflectPoint = Vector3.zero;
-            HandleBubbleAimHit(hit);
+            HandleAimHit(hit);
         }
 
         private void ReflectedHit(RaycastHit hit, Vector3 direction)
@@ -104,7 +104,7 @@ namespace Game.Scripts.Player
             else
             {
                 lineRenderer.SetPosition(2, reflectedHit.point);
-                HandleBubbleAimHit(reflectedHit);
+                HandleAimHit(reflectedHit);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Game.Scripts.Player
             return direction;
         }
 
-        private void HandleBubbleAimHit(RaycastHit hit)
+        private void HandleAimHit(RaycastHit hit)
         {
             lineRenderer.enabled = true;
             _bubbleAimTarget.ActivateGhostBubble(hit);

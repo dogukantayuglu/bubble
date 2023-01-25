@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Game.Scripts.Interfaces
 {
-    public interface IGridBuffer
+    public interface IGridDataProvider
     {
         GridData GetFreeGridData();
-        GridData GetClosesFreeGridData(Vector2 position);
+        GridData GetClosestFreeGridData(Vector2 position);
     }
 }

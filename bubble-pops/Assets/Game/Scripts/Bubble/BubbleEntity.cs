@@ -61,17 +61,18 @@ namespace Game.Scripts.Bubble
 
         public void GetShotToGrid(GridData gridData, Vector3 reflectPoint, Action onCompleteAction)
         {
+            var targetPosition = gridData.Position;
             if (reflectPoint != Vector3.zero)
             {
                 MoveToPosition(reflectPoint).OnComplete(() =>
                 {
-                    MoveToPosition(gridData.Position).OnComplete(onCompleteAction.Invoke);
+                    MoveToPosition(targetPosition).OnComplete(onCompleteAction.Invoke);
                 });
             }
 
             else
             {
-                MoveToPosition(gridData.Position).OnComplete(onCompleteAction.Invoke);
+                MoveToPosition(targetPosition).OnComplete(onCompleteAction.Invoke);
             }
         }
 

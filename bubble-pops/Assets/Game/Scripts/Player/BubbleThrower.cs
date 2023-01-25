@@ -19,9 +19,9 @@ namespace Game.Scripts.Player
         private IBubbleBuffer _bubbleBuffer;
         private bool _canThrow;
 
-        public void Initialize(IBubbleBuffer bubbleBuffer, IGridBuffer gridBuffer, Vector3 queueStartPosition)
+        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataProvider gridDataProvider, Vector3 queueStartPosition)
         {
-            ghostBubbleHandler.Initialize(gridBuffer);
+            ghostBubbleHandler.Initialize(gridDataProvider);
             _bubbleBuffer = bubbleBuffer;
             _queueStartPosition = queueStartPosition;
             _bubblesInQueue = new Queue<BubbleEntity>();
@@ -43,7 +43,7 @@ namespace Game.Scripts.Player
         public void ThrowBubble(Vector3 reflectPoint)
         {
             if (!_canThrow) return;
-            _canThrow = false;
+            DisableThrowing();
             var bubbleEntity = _bubblesInQueue.Dequeue();
             var targetGridData = ghostBubbleHandler.TargetGridData;
             targetGridData.OccupationState = GridOccupationStates.Occupied;
@@ -53,7 +53,14 @@ namespace Game.Scripts.Player
 
         private void EnableThrowing()
         {
+            print("Enabled");
             _canThrow = true;
+        }
+
+        private void DisableThrowing()
+        {
+            print("Disabled");
+            _canThrow = false;
         }
 
         private void MoveItemInQueue()
