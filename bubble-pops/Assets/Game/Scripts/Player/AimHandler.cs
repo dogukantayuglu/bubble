@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Scripts.Interfaces;
 using UnityEngine;
 
@@ -8,13 +9,17 @@ namespace Game.Scripts.Player
         [SerializeField] private Camera gameCamera;
         [SerializeField] private LineRenderer lineRenderer;
 
+        private bool _isAiming;
+        private Vector3 _reflectPoint;
         private Vector3 _originPosition;
-        private IBubbleTargetHandler _bubbleTargetHandler;
+        private IBubbleAimHandler _bubbleAimHandler;
+        private IBubbleShooter _bubbleShooter;
         private const string Reflector = "Reflector";
 
-        public void Initialize(IBubbleTargetHandler bubbleTargetHandler, Vector3 originPosition)
+        public void Initialize(IBubbleAimHandler bubbleAimHandler, IBubbleShooter bubbleShooter, Vector3 originPosition)
         {
-            _bubbleTargetHandler = bubbleTargetHandler;
+            _bubbleShooter = bubbleShooter;
+            _bubbleAimHandler = bubbleAimHandler;
             _originPosition = originPosition;
             lineRenderer.SetPosition(0, originPosition);
         }
@@ -31,15 +36,18 @@ namespace Game.Scripts.Player
                 OnMouseButtonActive();
             }
 
-            else
+            else if (_isAiming)
             {
+                _isAiming = false;
                 lineRenderer.enabled = false;
-                _bubbleTargetHandler.DeactivateActiveGhostBubble();
+                _bubbleShooter.ShootBubble(_reflectPoint);
+                _bubbleAimHandler.DeactivateGhostBubble();
             }
         }
 
         private void OnMouseButtonActive()
         {
+            _isAiming = true;
             var direction = CalculateDirection();
 
             if (Mathf.Abs(direction.x) > 0.88f)
@@ -70,7 +78,8 @@ namespace Game.Scripts.Player
         {
             lineRenderer.SetPosition(1, hit.point);
             lineRenderer.SetPosition(2, hit.point);
-            HandleBubbleHit(hit);
+            _reflectPoint = Vector3.zero;
+            HandleBubbleAimHit(hit);
         }
 
         private void ReflectedHit(RaycastHit hit, Vector3 direction)
@@ -78,6 +87,7 @@ namespace Game.Scripts.Player
             lineRenderer.SetPosition(1, hit.point);
             var reflectedDirection = direction;
             reflectedDirection.x *= -1;
+            _reflectPoint = hit.point;
             if (Physics.Raycast(hit.point, reflectedDirection, out var reflectedHit))
             {
                 CheckSecondReflection(reflectedHit);
@@ -94,7 +104,7 @@ namespace Game.Scripts.Player
             else
             {
                 lineRenderer.SetPosition(2, reflectedHit.point);
-                HandleBubbleHit(reflectedHit);
+                HandleBubbleAimHit(reflectedHit);
             }
         }
 
@@ -107,10 +117,10 @@ namespace Game.Scripts.Player
             return direction;
         }
 
-        private void HandleBubbleHit(RaycastHit hit)
+        private void HandleBubbleAimHit(RaycastHit hit)
         {
             lineRenderer.enabled = true;
-            _bubbleTargetHandler.HandleBubbleHit(hit);
+            _bubbleAimHandler.HandleBubbleAimHit(hit);
         }
     }
 }

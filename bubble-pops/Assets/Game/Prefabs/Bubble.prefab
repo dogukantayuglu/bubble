@@ -49,9 +49,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bubbleAnimation: {fileID: 2918292052127368545}
-  bubbleCollider: {fileID: 7769641381137890358}
   spriteRenderer: {fileID: 7206970765324538236}
   valueText: {fileID: 7206970766163943242}
+  shootMovementDuration: 0.12
 --- !u!114 &2918292052127368545
 MonoBehaviour:
   m_ObjectHideFlags: 0

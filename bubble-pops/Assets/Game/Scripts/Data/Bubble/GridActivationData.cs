@@ -9,7 +9,8 @@ namespace Game.Scripts.Data.Bubble
         public readonly Vector2 ActivationPosition;
         public readonly BubbleValueData BubbleValueData;
 
-        public GridActivationData(GridCoordinateData activationCoordinateData, Vector2 activationPosition, BubbleValueData bubbleValueData)
+        public GridActivationData(GridCoordinateData activationCoordinateData, Vector2 activationPosition,
+            BubbleValueData bubbleValueData = null)
         {
             ActivationCoordinateData = activationCoordinateData;
             ActivationPosition = activationPosition;

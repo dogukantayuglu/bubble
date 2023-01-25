@@ -7,6 +7,7 @@ namespace Game.Scripts.Bubble
 {
     public class GhostBubbleEntity : MonoBehaviour
     {
+        public GridData CurrentGridData => _currentGridData;
         private enum GhostBubbleStates
         {
             Inactive,

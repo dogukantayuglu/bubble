@@ -13,9 +13,9 @@ namespace Game.Scripts.Controllers
         {
             var playerCenterPosition = playerCenterTransform.position;
             playerBubbleHandler.Initialize(bubbleController, playerCenterPosition);
-            aimHandler.Initialize(bubbleController, playerCenterPosition);
+            aimHandler.Initialize(bubbleController, playerBubbleHandler, playerCenterPosition);
         }
-        
+
         public void ActivateInitBubbles()
         {
             playerBubbleHandler.ActivateInitBubbles();

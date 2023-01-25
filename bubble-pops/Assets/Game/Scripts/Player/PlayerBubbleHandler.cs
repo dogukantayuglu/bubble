@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Game.Scripts.Player
 {
-    public class PlayerBubbleHandler : MonoBehaviour
+    public class PlayerBubbleHandler : MonoBehaviour, IBubbleShooter
     {
         [SerializeField] private int maxQueueCount = 2;
 
-        private List<BubbleEntity> _bubblesInQueue;
+        private Queue<BubbleEntity> _bubblesInQueue;
         private Vector3 _queueStartPosition;
         private IBubbleBuffer _bubbleBuffer;
 
@@ -18,7 +18,7 @@ namespace Game.Scripts.Player
         {
             _bubbleBuffer = bubbleBuffer;
             _queueStartPosition = queueStartPosition;
-            _bubblesInQueue = new List<BubbleEntity>();
+            _bubblesInQueue = new Queue<BubbleEntity>();
         }
 
         public void ActivateInitBubbles()
@@ -28,9 +28,15 @@ namespace Game.Scripts.Player
                 var bubbleEntity = _bubbleBuffer.GetBubbleForPlayer();
                 var position = _queueStartPosition;
                 position.x -= i * GameData.BubbleSize;
-                _bubblesInQueue.Add(bubbleEntity);
+                _bubblesInQueue.Enqueue(bubbleEntity);
                 bubbleEntity.ActivateAtQueue(position, i != 0);
             }
+        }
+
+        public void ShootBubble(Vector3 reflectPoint)
+        {
+            var bubbleToShoot = _bubblesInQueue.Dequeue();
+            _bubbleBuffer.ShootBubble(bubbleToShoot, reflectPoint);
         }
     }
 }

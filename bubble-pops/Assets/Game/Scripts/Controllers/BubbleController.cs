@@ -10,14 +10,14 @@ using UnityEngine;
 
 namespace Game.Scripts.Controllers
 {
-    public class BubbleController : MonoBehaviour, IBubbleBuffer, IBubbleTargetHandler
+    public class BubbleController : MonoBehaviour, IBubbleBuffer, IBubbleAimHandler
     {
         [SerializeField] private BubblePool bubblePool;
         [SerializeField] private BubbleValueSo bubbleValueSo;
         [SerializeField] private GhostBubbleEntity ghostBubbleEntityPrefab;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
 
-        private List<BubbleEntity> _activeBubbleEntities;
+        private List<BubbleEntity> _bubbleEntitiesOnGrid;
         private GhostBubbleEntity _ghostBubbleEntity;
         private IGridBuffer _gridBuffer;
 
@@ -25,7 +25,7 @@ namespace Game.Scripts.Controllers
         {
             GenerateGhostBubble();
             _gridBuffer = gridBuffer;
-            _activeBubbleEntities = new List<BubbleEntity>();
+            _bubbleEntitiesOnGrid = new List<BubbleEntity>();
             bubblePool.Initialize();
         }
 
@@ -75,7 +75,7 @@ namespace Game.Scripts.Controllers
                 bubbleValueSo.GetSpawnableValue());
             
             bubbleEntity.ActivateOnGrid(bubbleActivationData);
-            _activeBubbleEntities.Add(bubbleEntity);
+            _bubbleEntitiesOnGrid.Add(bubbleEntity);
         }
 
         public BubbleEntity GetBubbleForPlayer()
@@ -85,13 +85,19 @@ namespace Game.Scripts.Controllers
             return bubbleEntity;
         }
 
-        public void HandleBubbleHit(RaycastHit hit)
+        public void ShootBubble(BubbleEntity bubbleEntity, Vector3 reflectPoint)
+        {
+            var targetGridData = _ghostBubbleEntity.CurrentGridData;
+            bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
+        }
+
+        public void HandleBubbleAimHit(RaycastHit hit)
         {
             var closestGridData = _gridBuffer.GetClosesFreeGridData(hit.point);
             _ghostBubbleEntity.ActivateAtGrid(closestGridData);
         }
 
-        public void DeactivateActiveGhostBubble()
+        public void DeactivateGhostBubble()
         {
             _ghostBubbleEntity.Deactivate();
         }
