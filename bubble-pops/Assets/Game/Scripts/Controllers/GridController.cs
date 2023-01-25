@@ -34,12 +34,29 @@ namespace Game.Scripts.Controllers
             {
                 if (gridData.OccupationState == GridOccupationStates.Free)
                 {
-                    gridData.OccupationState = GridOccupationStates.Occupied;
                     return gridData;
                 }
             }
 
             return null;
-        } 
+        }
+
+        public GridData GetClosesFreeGridData(Vector2 position)
+        {
+            var closestGridData = GetFreeGridData();
+            var closestPosition = closestGridData.Position;
+            var closestDistance = Vector2.Distance(closestPosition, position);
+
+            foreach (var gridData in _gridDataList)
+            {
+                if (gridData.OccupationState != GridOccupationStates.Free) continue;
+                var distance = Vector2.Distance(gridData.Position, position);
+                if (distance >= closestDistance) continue;
+                closestDistance = distance;
+                closestGridData = gridData;
+            }
+
+            return closestGridData;
+        }
     }
 }

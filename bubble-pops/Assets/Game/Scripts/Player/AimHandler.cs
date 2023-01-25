@@ -1,3 +1,4 @@
+using Game.Scripts.Interfaces;
 using UnityEngine;
 
 namespace Game.Scripts.Player
@@ -8,10 +9,12 @@ namespace Game.Scripts.Player
         [SerializeField] private LineRenderer lineRenderer;
 
         private Vector3 _originPosition;
+        private IBubbleTargetHandler _bubbleTargetHandler;
         private const string Reflector = "Reflector";
 
-        public void Initialize(Vector3 originPosition)
+        public void Initialize(IBubbleTargetHandler bubbleTargetHandler, Vector3 originPosition)
         {
+            _bubbleTargetHandler = bubbleTargetHandler;
             _originPosition = originPosition;
             lineRenderer.SetPosition(0, originPosition);
         }
@@ -31,6 +34,7 @@ namespace Game.Scripts.Player
             else
             {
                 lineRenderer.enabled = false;
+                _bubbleTargetHandler.DeactivateActiveGhostBubble();
             }
         }
 
@@ -106,6 +110,7 @@ namespace Game.Scripts.Player
         private void HandleBubbleHit(RaycastHit hit)
         {
             lineRenderer.enabled = true;
+            _bubbleTargetHandler.HandleBubbleHit(hit);
         }
     }
 }

@@ -8,15 +8,15 @@ namespace Game.Scripts.Player
 {
     public class PlayerBubbleHandler : MonoBehaviour
     {
-        public IBubbleBuffer BubbleBuffer { get; set; }
-        
         [SerializeField] private int maxQueueCount = 2;
 
         private List<BubbleEntity> _bubblesInQueue;
         private Vector3 _queueStartPosition;
-        
-        public void Initialize(Vector3 queueStartPosition)
+        private IBubbleBuffer _bubbleBuffer;
+
+        public void Initialize(IBubbleBuffer bubbleBuffer, Vector3 queueStartPosition)
         {
+            _bubbleBuffer = bubbleBuffer;
             _queueStartPosition = queueStartPosition;
             _bubblesInQueue = new List<BubbleEntity>();
         }
@@ -25,7 +25,7 @@ namespace Game.Scripts.Player
         {
             for (var i = 0; i < maxQueueCount; i++)
             {
-                var bubbleEntity = BubbleBuffer.GetBubbleForPlayer();
+                var bubbleEntity = _bubbleBuffer.GetBubbleForPlayer();
                 var position = _queueStartPosition;
                 position.x -= i * GameData.BubbleSize;
                 _bubblesInQueue.Add(bubbleEntity);

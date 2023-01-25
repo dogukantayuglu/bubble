@@ -757,6 +757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubblePool: {fileID: 1018333575}
   bubbleValueSo: {fileID: 11400000, guid: d518199651a38c24092f3874fae61058, type: 2}
+  ghostBubbleEntityPrefab: {fileID: 3893601999437265670, guid: e224d7899a5fc2b418aa5d8a0d3bedcc, type: 3}
   massBubbleGenerationInterval: 0.035
 --- !u!1 &1575088376
 GameObject:
@@ -1071,7 +1072,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameCamera: {fileID: 1584865161}
   lineRenderer: {fileID: 1887016901}
-  maxXDirectionValue: 0.66
 --- !u!120 &1887016901
 LineRenderer:
   m_ObjectHideFlags: 0

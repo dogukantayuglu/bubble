@@ -6,9 +6,11 @@ namespace Game.Scripts.Bubble
 {
     public class BubbleEntity : MonoBehaviour
     {
+        public Collider BubbleCollider => bubbleCollider;
         public int Value => _value;
 
         [SerializeField] private BubbleAnimation bubbleAnimation;
+        [SerializeField] private Collider bubbleCollider;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private TextMeshPro valueText;
 

@@ -12,7 +12,6 @@ namespace Game.Scripts.Managers
         private void Awake()
         {
             InitializeGame();
-            SetInterfaces();
         }
 
         private void Start()
@@ -24,14 +23,8 @@ namespace Game.Scripts.Managers
         private void InitializeGame()
         {
             gridController.Initialize();
-            bubbleController.Initialize();
-            playerController.Initialize();
-        }
-
-        private void SetInterfaces()
-        {
-            bubbleController.GridBuffer = gridController;
-            playerController.BubbleBuffer = bubbleController;
+            bubbleController.Initialize(gridController);
+            playerController.Initialize(bubbleController);
         }
     }
 }
