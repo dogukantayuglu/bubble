@@ -16,7 +16,6 @@ namespace Game.Scripts.Bubble
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private TextMeshPro valueText;
         [SerializeField] private float shootMovementSpeed = 15f;
-        [SerializeField] private float queueMovementDuration = 0.25f;
 
         private bool _isShooting;
         private readonly BubbleCoordinateData _bubbleCoordinate = new();
@@ -55,24 +54,21 @@ namespace Game.Scripts.Bubble
 
         public Tween MoveToCenterPositionOnQueue(Vector3 position)
         {
-            _transform.DOScale(Vector3.one * GameData.BubbleSize, queueMovementDuration);
-            return _transform.DOMove(position, queueMovementDuration);
+            _transform.DOScale(Vector3.one * GameData.BubbleSize, GameData.QueueDelay);
+            return _transform.DOMove(position, GameData.QueueDelay);
         }
 
-        public void GetShotToGrid(GridData gridData, Vector3 reflectPoint, Action onCompleteAction)
+        public void GetShotToGrid(GridData gridData, Vector3 reflectPoint)
         {
             var targetPosition = gridData.Position;
             if (reflectPoint != Vector3.zero)
             {
-                MoveToPosition(reflectPoint).OnComplete(() =>
-                {
-                    MoveToPosition(targetPosition).OnComplete(onCompleteAction.Invoke);
-                });
+                MoveToPosition(reflectPoint).OnComplete(() => { MoveToPosition(targetPosition); });
             }
 
             else
             {
-                MoveToPosition(targetPosition).OnComplete(onCompleteAction.Invoke);
+                MoveToPosition(targetPosition);
             }
         }
 

@@ -43,30 +43,25 @@ namespace Game.Scripts.Player
         public void ThrowBubble(Vector3 reflectPoint)
         {
             if (!_canThrow) return;
-            DisableThrowing();
+            DelayThrowing();
             var bubbleEntity = _bubblesInQueue.Dequeue();
             var targetGridData = ghostBubbleHandler.TargetGridData;
             targetGridData.OccupationState = GridOccupationStates.Occupied;
-            bubbleEntity.GetShotToGrid(targetGridData, reflectPoint, EnableThrowing);
-            MoveItemInQueue();
+            bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
+            IterateQueue();
         }
 
-        private void EnableThrowing()
+        private void DelayThrowing()
         {
-            print("Enabled");
-            _canThrow = true;
-        }
-
-        private void DisableThrowing()
-        {
-            print("Disabled");
             _canThrow = false;
+            DOVirtual.DelayedCall(GameData.QueueDelay, () => _canThrow = true);
         }
 
-        private void MoveItemInQueue()
+        private void IterateQueue()
         {
             var bubbleEntity = _bubblesInQueue.Peek();
-            bubbleEntity.MoveToCenterPositionOnQueue(_queueStartPosition).OnComplete(AddItemToQueue);
+            bubbleEntity.MoveToCenterPositionOnQueue(_queueStartPosition);
+            AddItemToQueue();
         }
 
         private void AddItemToQueue()
