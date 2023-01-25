@@ -7,7 +7,6 @@ namespace Game.Scripts.Managers
     {
         [SerializeField] private GridDataController gridDataController;
         [SerializeField] private BubbleController bubbleController;
-        [SerializeField] private PlayerController playerController;
         
         private void Awake()
         {
@@ -17,14 +16,13 @@ namespace Game.Scripts.Managers
         private void Start()
         {
             bubbleController.GenerateBubblesForStart();
-            playerController.ActivateInitBubbles();
+            bubbleController.ActivateInitThrowBubbles();
         }
 
         private void InitializeGame()
         {
             gridDataController.Initialize();
             bubbleController.Initialize(gridDataController);
-            playerController.Initialize(bubbleController, gridDataController);
         }
     }
 }

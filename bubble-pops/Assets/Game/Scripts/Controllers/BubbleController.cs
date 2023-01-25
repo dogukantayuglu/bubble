@@ -12,21 +12,27 @@ namespace Game.Scripts.Controllers
 {
     public class BubbleController : MonoBehaviour, IBubbleBuffer
     {
+        [SerializeField] private MergeHandler mergeHandler;
         [SerializeField] private BubblePool bubblePool;
         [SerializeField] private BubbleValueSo bubbleValueSo;
+        [SerializeField] private BubbleThrower bubbleThrower;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
 
-        private List<BubbleEntity> _bubbleEntitiesOnGrid;
         private IGridDataProvider _gridDataProvider;
 
         public void Initialize(IGridDataProvider gridDataProvider)
         {
             _gridDataProvider = gridDataProvider;
-            _bubbleEntitiesOnGrid = new List<BubbleEntity>();
+            mergeHandler.Initialize(bubblePool);
+            bubbleThrower.Initialize(this, gridDataProvider);
             bubblePool.Initialize();
         }
 
-        
+        public void ActivateInitThrowBubbles()
+        {
+            bubbleThrower.ActivateInitThrowBubbles();
+        }
+
         public void GenerateBubblesForStart()
         {
             var gridDataList = GetInitRowsDataList();
@@ -67,7 +73,7 @@ namespace Game.Scripts.Controllers
                 bubbleValueSo.GetSpawnableValue());
 
             bubbleEntity.ActivateOnGrid(bubbleActivationData);
-            _bubbleEntitiesOnGrid.Add(bubbleEntity);
+            mergeHandler.CheckMerge(bubbleEntity);
         }
 
         public BubbleEntity GetBubbleForPlayer()
@@ -75,6 +81,11 @@ namespace Game.Scripts.Controllers
             var bubbleEntity = bubblePool.GetBubbleFromPool();
             bubbleEntity.SetBubbleValue(bubbleValueSo.GetSpawnableValue());
             return bubbleEntity;
+        }
+
+        public void AddActiveBubble(BubbleEntity bubbleEntity)
+        {
+            mergeHandler.CheckMerge(bubbleEntity);
         }
     }
 }

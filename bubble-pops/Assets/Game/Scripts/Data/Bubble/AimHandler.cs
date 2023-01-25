@@ -1,7 +1,7 @@
 using Game.Scripts.Interfaces;
 using UnityEngine;
 
-namespace Game.Scripts.Player
+namespace Game.Scripts.Data.Bubble
 {
     public class AimHandler : MonoBehaviour
     {

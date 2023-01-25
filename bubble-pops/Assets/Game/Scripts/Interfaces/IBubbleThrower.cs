@@ -8,5 +8,6 @@ namespace Game.Scripts.Interfaces
         void ThrowBubble(Vector3 reflectPoint);
         void ActivateGhostBubble(RaycastHit hit);
         void DeactivateGhostBubble();
+        void PrepareForThrow();
     }
 }

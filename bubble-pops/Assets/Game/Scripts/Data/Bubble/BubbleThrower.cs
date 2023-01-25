@@ -6,28 +6,31 @@ using Game.Scripts.Enums;
 using Game.Scripts.Interfaces;
 using UnityEngine;
 
-namespace Game.Scripts.Player
+namespace Game.Scripts.Data.Bubble
 {
     public class BubbleThrower : MonoBehaviour, IBubbleThrower
     {
+        [SerializeField] private Transform throwPositionTransform;
         [SerializeField] private int maxQueueCount = 2;
         [SerializeField] private GhostBubbleHandler ghostBubbleHandler;
+        [SerializeField] private AimHandler aimHandler;
 
         private Queue<BubbleEntity> _bubblesInQueue;
         private Vector3 _queueStartPosition;
         private IBubbleBuffer _bubbleBuffer;
         private bool _canThrow;
 
-        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataProvider gridDataProvider, Vector3 queueStartPosition)
+        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataProvider gridDataProvider)
         {
+            _queueStartPosition = throwPositionTransform.position;
+            aimHandler.Initialize(this, _queueStartPosition);
             ghostBubbleHandler.Initialize(gridDataProvider);
             _bubbleBuffer = bubbleBuffer;
-            _queueStartPosition = queueStartPosition;
             _bubblesInQueue = new Queue<BubbleEntity>();
             _canThrow = true;
         }
 
-        public void ActivateInitBubbles()
+        public void ActivateInitThrowBubbles()
         {
             for (var i = 0; i < maxQueueCount; i++)
             {
@@ -42,19 +45,12 @@ namespace Game.Scripts.Player
         public void ThrowBubble(Vector3 reflectPoint)
         {
             if (!_canThrow) return;
-            DelayThrowing();
+            _canThrow = false;
             var bubbleEntity = _bubblesInQueue.Dequeue();
             var targetGridData = ghostBubbleHandler.TargetGridData;
             targetGridData.OccupationState = GridOccupationStates.Occupied;
             bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
             ghostBubbleHandler.DeactivateGhostBubble();
-            IterateQueue();
-        }
-
-        private void DelayThrowing()
-        {
-            _canThrow = false;
-            DOVirtual.DelayedCall(GameData.QueueDelay, () => _canThrow = true);
         }
 
         private void IterateQueue()
@@ -81,6 +77,12 @@ namespace Game.Scripts.Player
         public void DeactivateGhostBubble()
         {
             ghostBubbleHandler.DeactivateGhostBubble();
+        }
+
+        public void PrepareForThrow()
+        {
+            IterateQueue();
+            DOVirtual.DelayedCall(GameData.QueueDelay, () => _canThrow = true);
         }
     }
 }

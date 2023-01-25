@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using Game.Scripts.Interfaces;
 using UnityEngine;
 
 namespace Game.Scripts.Bubble
 {
-    public class BubblePool : MonoBehaviour
+    public class BubblePool : MonoBehaviour, IBubblePool
     {
         [SerializeField] private BubbleEntity bubbleEntityPrefab;
         [SerializeField] private int poolCount;
@@ -33,6 +34,11 @@ namespace Game.Scripts.Bubble
         public BubbleEntity GetBubbleFromPool()
         {
             return _bubblePool.Pop();
+        }
+
+        public void ReturnBubbleToPool(BubbleEntity bubbleEntity)
+        {
+            _bubblePool.Push(bubbleEntity);
         }
     }
 }
