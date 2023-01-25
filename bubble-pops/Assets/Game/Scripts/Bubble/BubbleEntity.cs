@@ -1,5 +1,7 @@
+using System;
 using DG.Tweening;
 using Game.Scripts.Data.Bubble;
+using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
 using TMPro;
 using UnityEngine;
@@ -13,8 +15,10 @@ namespace Game.Scripts.Bubble
         [SerializeField] private BubbleAnimation bubbleAnimation;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private TextMeshPro valueText;
-        [SerializeField] private float shootMovementDuration = 0.7f;
+        [SerializeField] private float shootMovementSpeed = 15f;
+        [SerializeField] private float queueMovementDuration = 0.25f;
 
+        private bool _isShooting;
         private readonly BubbleCoordinateData _bubbleCoordinate = new();
         private Transform _transform;
         private int _value;
@@ -49,15 +53,31 @@ namespace Game.Scripts.Bubble
             bubbleAnimation.PlayActivationAnimation(smallSize);
         }
 
-        public void GetShotToGrid(GridData gridData, Vector3 reflectPoint)
+        public Tween MoveToCenterPositionOnQueue(Vector3 position)
         {
-            var sequence = DOTween.Sequence();
+            _transform.DOScale(Vector3.one * GameData.BubbleSize, queueMovementDuration);
+            return _transform.DOMove(position, queueMovementDuration);
+        }
+
+        public void GetShotToGrid(GridData gridData, Vector3 reflectPoint, Action onCompleteAction)
+        {
             if (reflectPoint != Vector3.zero)
             {
-                sequence.Append(_transform.DOMove(reflectPoint, shootMovementDuration));
+                MoveToPosition(reflectPoint).OnComplete(() =>
+                {
+                    MoveToPosition(gridData.Position).OnComplete(onCompleteAction.Invoke);
+                });
             }
 
-            sequence.Append(_transform.DOMove(gridData.Position, shootMovementDuration));
+            else
+            {
+                MoveToPosition(gridData.Position).OnComplete(onCompleteAction.Invoke);
+            }
+        }
+
+        private Tween MoveToPosition(Vector3 position)
+        {
+            return _transform.DOMove(position, shootMovementSpeed).SetSpeedBased();
         }
     }
 }

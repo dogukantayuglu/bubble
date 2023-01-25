@@ -10,41 +10,33 @@ using UnityEngine;
 
 namespace Game.Scripts.Controllers
 {
-    public class BubbleController : MonoBehaviour, IBubbleBuffer, IBubbleAimHandler
+    public class BubbleController : MonoBehaviour, IBubbleBuffer
     {
         [SerializeField] private BubblePool bubblePool;
         [SerializeField] private BubbleValueSo bubbleValueSo;
-        [SerializeField] private GhostBubbleEntity ghostBubbleEntityPrefab;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
 
         private List<BubbleEntity> _bubbleEntitiesOnGrid;
-        private GhostBubbleEntity _ghostBubbleEntity;
         private IGridBuffer _gridBuffer;
 
         public void Initialize(IGridBuffer gridBuffer)
         {
-            GenerateGhostBubble();
             _gridBuffer = gridBuffer;
             _bubbleEntitiesOnGrid = new List<BubbleEntity>();
             bubblePool.Initialize();
         }
 
-        private void GenerateGhostBubble()
-        {
-            _ghostBubbleEntity = Instantiate(ghostBubbleEntityPrefab, Vector3.zero, Quaternion.identity);
-            _ghostBubbleEntity.Initialize();
-        }
         
         public void GenerateBubblesForStart()
         {
             var gridDataList = GetInitRowsDataList();
             var sequence = DOTween.Sequence();
-            
+
             var count = gridDataList.Count;
             for (var i = 0; i < count; i++)
             {
                 var randomGridData = gridDataList[Random.Range(0, gridDataList.Count)];
-                sequence.AppendCallback(()=> GenerateBubbleAtEmptyGrid(randomGridData));
+                sequence.AppendCallback(() => GenerateBubbleAtEmptyGrid(randomGridData));
                 sequence.AppendInterval(massBubbleGenerationInterval);
                 gridDataList.Remove(randomGridData);
             }
@@ -68,12 +60,12 @@ namespace Game.Scripts.Controllers
         private void GenerateBubbleAtEmptyGrid(GridData gridData)
         {
             var bubbleEntity = bubblePool.GetBubbleFromPool();
-            
+
             var bubbleActivationData = new GridActivationData(
-                gridData.GridCoordinateData, 
+                gridData.GridCoordinateData,
                 gridData.Position,
                 bubbleValueSo.GetSpawnableValue());
-            
+
             bubbleEntity.ActivateOnGrid(bubbleActivationData);
             _bubbleEntitiesOnGrid.Add(bubbleEntity);
         }
@@ -83,23 +75,6 @@ namespace Game.Scripts.Controllers
             var bubbleEntity = bubblePool.GetBubbleFromPool();
             bubbleEntity.SetBubbleValue(bubbleValueSo.GetSpawnableValue());
             return bubbleEntity;
-        }
-
-        public void ShootBubble(BubbleEntity bubbleEntity, Vector3 reflectPoint)
-        {
-            var targetGridData = _ghostBubbleEntity.CurrentGridData;
-            bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
-        }
-
-        public void HandleBubbleAimHit(RaycastHit hit)
-        {
-            var closestGridData = _gridBuffer.GetClosesFreeGridData(hit.point);
-            _ghostBubbleEntity.ActivateAtGrid(closestGridData);
-        }
-
-        public void DeactivateGhostBubble()
-        {
-            _ghostBubbleEntity.Deactivate();
         }
     }
 }

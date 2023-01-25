@@ -24,7 +24,7 @@ namespace Game.Scripts.Managers
         {
             gridController.Initialize();
             bubbleController.Initialize(gridController);
-            playerController.Initialize(bubbleController);
+            playerController.Initialize(bubbleController, gridController);
         }
     }
 }

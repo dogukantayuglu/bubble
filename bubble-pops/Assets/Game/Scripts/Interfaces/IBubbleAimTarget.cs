@@ -2,9 +2,9 @@
 
 namespace Game.Scripts.Interfaces
 {
-    public interface IBubbleAimHandler
+    public interface IBubbleAimTarget
     {
-        void HandleBubbleAimHit(RaycastHit hit);
+        void ActivateGhostBubble(RaycastHit hit);
         void DeactivateGhostBubble();
     }
 }

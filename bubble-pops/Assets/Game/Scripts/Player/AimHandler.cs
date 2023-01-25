@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Game.Scripts.Interfaces;
 using UnityEngine;
 
@@ -12,14 +11,14 @@ namespace Game.Scripts.Player
         private bool _isAiming;
         private Vector3 _reflectPoint;
         private Vector3 _originPosition;
-        private IBubbleAimHandler _bubbleAimHandler;
-        private IBubbleShooter _bubbleShooter;
+        private IBubbleAimTarget _bubbleAimTarget;
+        private IBubbleThrower _bubbleThrower;
         private const string Reflector = "Reflector";
 
-        public void Initialize(IBubbleAimHandler bubbleAimHandler, IBubbleShooter bubbleShooter, Vector3 originPosition)
+        public void Initialize(IBubbleAimTarget bubbleAimTarget, IBubbleThrower bubbleThrower, Vector3 originPosition)
         {
-            _bubbleShooter = bubbleShooter;
-            _bubbleAimHandler = bubbleAimHandler;
+            _bubbleThrower = bubbleThrower;
+            _bubbleAimTarget = bubbleAimTarget;
             _originPosition = originPosition;
             lineRenderer.SetPosition(0, originPosition);
         }
@@ -40,8 +39,8 @@ namespace Game.Scripts.Player
             {
                 _isAiming = false;
                 lineRenderer.enabled = false;
-                _bubbleShooter.ShootBubble(_reflectPoint);
-                _bubbleAimHandler.DeactivateGhostBubble();
+                _bubbleThrower.ThrowBubble(_reflectPoint);
+                _bubbleAimTarget.DeactivateGhostBubble();
             }
         }
 
@@ -99,6 +98,7 @@ namespace Game.Scripts.Player
             if (reflectedHit.collider.CompareTag(Reflector))
             {
                 lineRenderer.enabled = false;
+                _bubbleAimTarget.DeactivateGhostBubble();
             }
 
             else
@@ -120,7 +120,7 @@ namespace Game.Scripts.Player
         private void HandleBubbleAimHit(RaycastHit hit)
         {
             lineRenderer.enabled = true;
-            _bubbleAimHandler.HandleBubbleAimHit(hit);
+            _bubbleAimTarget.ActivateGhostBubble(hit);
         }
     }
 }

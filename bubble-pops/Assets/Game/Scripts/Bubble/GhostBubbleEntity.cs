@@ -56,6 +56,7 @@ namespace Game.Scripts.Bubble
         public void Deactivate()
         {
             _currentState = GhostBubbleStates.Deactivating;
+            _transform.DOKill();
             _currentGridData = null;
             _transform.DOScale(Vector3.zero, animationDuration).OnComplete(SetStateInactive);
         }

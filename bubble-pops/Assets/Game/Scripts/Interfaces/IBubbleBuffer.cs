@@ -6,6 +6,5 @@ namespace Game.Scripts.Interfaces
     public interface IBubbleBuffer
     {
         BubbleEntity GetBubbleForPlayer();
-        void ShootBubble(BubbleEntity bubbleEntity, Vector3 reflectPoint);
     }
 }
