@@ -11,14 +11,12 @@ namespace Game.Scripts.Player
         private bool _isAiming;
         private Vector3 _reflectPoint;
         private Vector3 _originPosition;
-        private IBubbleAimTarget _bubbleAimTarget;
         private IBubbleThrower _bubbleThrower;
         private const string Reflector = "Reflector";
 
-        public void Initialize(IBubbleAimTarget bubbleAimTarget, IBubbleThrower bubbleThrower, Vector3 originPosition)
+        public void Initialize(IBubbleThrower bubbleThrower, Vector3 originPosition)
         {
             _bubbleThrower = bubbleThrower;
-            _bubbleAimTarget = bubbleAimTarget;
             _originPosition = originPosition;
             lineRenderer.SetPosition(0, originPosition);
         }
@@ -40,7 +38,6 @@ namespace Game.Scripts.Player
                 _isAiming = false;
                 lineRenderer.enabled = false;
                 _bubbleThrower.ThrowBubble(_reflectPoint);
-                _bubbleAimTarget.DeactivateGhostBubble();
             }
         }
 
@@ -98,7 +95,7 @@ namespace Game.Scripts.Player
             if (reflectedHit.collider.CompareTag(Reflector))
             {
                 lineRenderer.enabled = false;
-                _bubbleAimTarget.DeactivateGhostBubble();
+                _bubbleThrower.DeactivateGhostBubble();
             }
 
             else
@@ -120,7 +117,7 @@ namespace Game.Scripts.Player
         private void HandleAimHit(RaycastHit hit)
         {
             lineRenderer.enabled = true;
-            _bubbleAimTarget.ActivateGhostBubble(hit);
+            _bubbleThrower.ActivateGhostBubble(hit);
         }
     }
 }

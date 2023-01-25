@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Scripts.Player
 {
-    public class GhostBubbleHandler : MonoBehaviour, IBubbleAimTarget
+    public class GhostBubbleHandler : MonoBehaviour
     {
         public GridData TargetGridData => _ghostBubbleEntity.CurrentGridData;
         

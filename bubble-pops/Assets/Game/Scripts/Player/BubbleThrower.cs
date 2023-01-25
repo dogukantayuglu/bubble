@@ -10,7 +10,6 @@ namespace Game.Scripts.Player
 {
     public class BubbleThrower : MonoBehaviour, IBubbleThrower
     {
-        public IBubbleAimTarget BubbleAimTarget => ghostBubbleHandler;
         [SerializeField] private int maxQueueCount = 2;
         [SerializeField] private GhostBubbleHandler ghostBubbleHandler;
 
@@ -48,6 +47,7 @@ namespace Game.Scripts.Player
             var targetGridData = ghostBubbleHandler.TargetGridData;
             targetGridData.OccupationState = GridOccupationStates.Occupied;
             bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
+            ghostBubbleHandler.DeactivateGhostBubble();
             IterateQueue();
         }
 
@@ -71,6 +71,16 @@ namespace Game.Scripts.Player
             position.x -= _bubblesInQueue.Count * GameData.BubbleSize;
             _bubblesInQueue.Enqueue(bubbleEntity);
             bubbleEntity.ActivateAtQueue(position, true);
+        }
+
+        public void ActivateGhostBubble(RaycastHit hit)
+        {
+            ghostBubbleHandler.ActivateGhostBubble(hit);
+        }
+
+        public void DeactivateGhostBubble()
+        {
+            ghostBubbleHandler.DeactivateGhostBubble();
         }
     }
 }
