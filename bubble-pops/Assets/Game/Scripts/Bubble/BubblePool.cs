@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Game.Scripts.Interfaces;
 using UnityEngine;
@@ -11,19 +12,19 @@ namespace Game.Scripts.Bubble
 
         private Stack<BubbleEntity> _bubblePool;
 
-        public void Initialize()
+        public void Initialize(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
         {
             _bubblePool = new Stack<BubbleEntity>();
-            PoolBubbleEntities();
+            PoolBubbleEntities(onMovementCompleteAction, queueAnimationDuration);
         }
 
-        private void PoolBubbleEntities()
+        private void PoolBubbleEntities(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
         {
             var poolTransform = transform;
             for (var i = 0; i < poolCount; i++)
             {
                 var bubbleEntity = Instantiate(bubbleEntityPrefab, Vector3.zero, Quaternion.identity, poolTransform);
-                bubbleEntity.Initialize();
+                bubbleEntity.Initialize(onMovementCompleteAction, queueAnimationDuration);
                 var bubbleGameObject = bubbleEntity.gameObject;
                 bubbleGameObject.SetActive(false);
                 bubbleGameObject.name = $"Bubble {i + 1}";

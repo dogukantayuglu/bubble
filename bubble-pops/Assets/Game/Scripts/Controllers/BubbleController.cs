@@ -17,15 +17,16 @@ namespace Game.Scripts.Controllers
         [SerializeField] private BubbleValueSo bubbleValueSo;
         [SerializeField] private BubbleThrower bubbleThrower;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
+        [SerializeField] private float queueAnimationDuration = 0.25f;
 
         private IGridDataProvider _gridDataProvider;
 
         public void Initialize(IGridDataProvider gridDataProvider)
         {
             _gridDataProvider = gridDataProvider;
-            mergeHandler.Initialize(bubblePool);
-            bubbleThrower.Initialize(this, gridDataProvider);
-            bubblePool.Initialize();
+            mergeHandler.Initialize(bubblePool, bubbleThrower.PrepareForThrow);
+            bubbleThrower.Initialize(this, gridDataProvider, queueAnimationDuration);
+            bubblePool.Initialize(AddActiveBubble, queueAnimationDuration);
         }
 
         public void ActivateInitThrowBubbles()
@@ -73,7 +74,7 @@ namespace Game.Scripts.Controllers
                 bubbleValueSo.GetSpawnableValue());
 
             bubbleEntity.ActivateOnGrid(bubbleActivationData);
-            mergeHandler.CheckMerge(bubbleEntity);
+            AddActiveBubble(bubbleEntity);
         }
 
         public BubbleEntity GetBubbleForPlayer()

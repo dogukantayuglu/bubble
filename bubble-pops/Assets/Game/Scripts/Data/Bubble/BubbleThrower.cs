@@ -15,13 +15,15 @@ namespace Game.Scripts.Data.Bubble
         [SerializeField] private GhostBubbleHandler ghostBubbleHandler;
         [SerializeField] private AimHandler aimHandler;
 
+        private float _queueAnimationDuration;
         private Queue<BubbleEntity> _bubblesInQueue;
         private Vector3 _queueStartPosition;
         private IBubbleBuffer _bubbleBuffer;
         private bool _canThrow;
 
-        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataProvider gridDataProvider)
+        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataProvider gridDataProvider, float queueAnimDuration)
         {
+            _queueAnimationDuration = queueAnimDuration;
             _queueStartPosition = throwPositionTransform.position;
             aimHandler.Initialize(this, _queueStartPosition);
             ghostBubbleHandler.Initialize(gridDataProvider);
@@ -81,8 +83,9 @@ namespace Game.Scripts.Data.Bubble
 
         public void PrepareForThrow()
         {
+            if (_bubblesInQueue.Count >= maxQueueCount) return;
             IterateQueue();
-            DOVirtual.DelayedCall(GameData.QueueDelay, () => _canThrow = true);
+            DOVirtual.DelayedCall(_queueAnimationDuration, () => _canThrow = true);
         }
     }
 }

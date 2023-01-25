@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Game.Scripts.Data.Bubble;
 using Game.Scripts.Data.Game;
@@ -16,13 +17,17 @@ namespace Game.Scripts.Bubble
         [SerializeField] private TextMeshPro valueText;
         [SerializeField] private float shootMovementSpeed = 15f;
 
+        private float _queueAnimationDuration;
         private bool _isShooting;
         private readonly BubbleCoordinateData _bubbleCoordinate = new();
         private Transform _transform;
         private int _value;
+        private Action<BubbleEntity> _onMovementCompleteAction;
 
-        public void Initialize()
+        public void Initialize(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
         {
+            _queueAnimationDuration = queueAnimationDuration;
+            _onMovementCompleteAction = onMovementCompleteAction;
             _transform = transform;
             bubbleAnimation.Initialize();
         }
@@ -51,10 +56,10 @@ namespace Game.Scripts.Bubble
             bubbleAnimation.PlayActivationAnimation(smallSize);
         }
 
-        public Tween MoveToCenterPositionOnQueue(Vector3 position)
+        public void MoveToCenterPositionOnQueue(Vector3 position)
         {
-            _transform.DOScale(Vector3.one * GameData.BubbleSize, GameData.QueueDelay);
-            return _transform.DOMove(position, GameData.QueueDelay);
+            _transform.DOScale(Vector3.one * GameData.BubbleSize, _queueAnimationDuration);
+            _transform.DOMove(position, _queueAnimationDuration);
         }
 
         public void GetShotToGrid(GridData gridData, Vector3 reflectPoint)
@@ -62,12 +67,15 @@ namespace Game.Scripts.Bubble
             var targetPosition = gridData.Position;
             if (reflectPoint != Vector3.zero)
             {
-                MoveToPosition(reflectPoint).OnComplete(() => { MoveToPosition(targetPosition); });
+                MoveToPosition(reflectPoint).OnComplete(() =>
+                {
+                    MoveToPosition(targetPosition).OnComplete(() => _onMovementCompleteAction.Invoke(this));
+                });
             }
 
             else
             {
-                MoveToPosition(targetPosition);
+                MoveToPosition(targetPosition).OnComplete(() => _onMovementCompleteAction.Invoke(this));
             }
         }
 
