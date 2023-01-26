@@ -18,9 +18,14 @@ namespace Game.Scripts.Bubble
             _bubbleEntitiesOnGrid = new List<BubbleEntity>();
         }
 
-        public void CheckMerge(BubbleEntity bubbleEntity)
+        public void AddActiveBubble(BubbleEntity bubbleEntity)
         {
             _bubbleEntitiesOnGrid.Add(bubbleEntity);
+        }
+
+        public void CheckMerge(BubbleEntity bubbleEntity)
+        {
+            AddActiveBubble(bubbleEntity);
             _onMergeComplete.Invoke();
         }
     }

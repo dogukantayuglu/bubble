@@ -5,15 +5,12 @@ namespace Game.Scripts.Data.Bubble
 {
     public struct GridActivationData
     {
-        public readonly GridCoordinateData ActivationCoordinateData;
-        public readonly Vector2 ActivationPosition;
+        public readonly GridData GridData;
         public readonly BubbleValueData BubbleValueData;
 
-        public GridActivationData(GridCoordinateData activationCoordinateData, Vector2 activationPosition,
-            BubbleValueData bubbleValueData = null)
+        public GridActivationData(GridData gridData, BubbleValueData bubbleValueData = null)
         {
-            ActivationCoordinateData = activationCoordinateData;
-            ActivationPosition = activationPosition;
+            GridData = gridData;
             BubbleValueData = bubbleValueData;
         }
     }

@@ -8,6 +8,12 @@ namespace Game.Scripts.Bubble
 {
     public class GridGenerator : MonoBehaviour
     {
+        public int RowCount => rowCount;
+        public float TotalVerticalSpacing => GameData.BubbleSize * verticalSpacingMultiplier;
+
+        private float ZigZagValue => _zigZagSwitch ? columnZigzagValue : 0;
+        private float TotalHorizontalOffset => _xStartPosition + ZigZagValue + xOffset;
+
         [SerializeField] private int rowCount = 5;
         [SerializeField] private int columnCount = 5;
         [SerializeField] private float yStartPosition;
@@ -15,33 +21,52 @@ namespace Game.Scripts.Bubble
         [SerializeField] private float xOffset = 0.25f;
         [SerializeField] private float verticalSpacingMultiplier = 0.9f;
         [SerializeField] private float horizontalSpacingMultiplier = 1.1f;
+        [SerializeField] private DebugBubbleEntity debugBubbleEntityPrefab;
+        [SerializeField] private Transform testBubbleParent;
 
+        private List<GridData> _gridDataList;
+        private bool _zigZagSwitch;
+        private float _xStartPosition;
 
-        public List<GridData> GenerateGrid()
+        private void SwitchZigZagValue() => _zigZagSwitch = !_zigZagSwitch;
+
+        public List<GridData> GenerateInitialGrid()
         {
-            var gridDataList = new List<GridData>();
-            var xStartPosition = CalculateXStartPosition();
+            _gridDataList = new List<GridData>();
+            _xStartPosition = CalculateXStartPosition();
 
-            var position = new Vector2(xStartPosition, yStartPosition);
+            var position = new Vector2(_xStartPosition, yStartPosition);
 
             for (var i = 0; i < rowCount; i++)
             {
-                var zigZagMultiplier = i % 2 == 0 ? 1 : 0;
-                var zigZagValue = columnZigzagValue * zigZagMultiplier;
+                position.y = yStartPosition - (TotalVerticalSpacing * i);
+                var rowYPosition = position.y;
 
-                position.y = yStartPosition - (GameData.BubbleSize * i * verticalSpacingMultiplier);
+                GenerateRow(rowYPosition, i);
 
-                for (var j = 0; j < columnCount; j++)
-                {
-                    position.x = (j * GameData.BubbleSize * horizontalSpacingMultiplier) + xStartPosition + zigZagValue + xOffset;
-                    gridDataList.Add(GenerateGridData(i + 1, j + 1, position));
-                }
-
-                position.x += columnZigzagValue * zigZagMultiplier;
+                position.x += ZigZagValue;
+                SwitchZigZagValue();
             }
 
 
-            return gridDataList;
+            return _gridDataList;
+        }
+
+        private void GenerateRow(float rowYPosition, int rowIndex)
+        {
+            for (var j = 0; j < columnCount; j++)
+            {
+                var xPos = (j * GameData.BubbleSize * horizontalSpacingMultiplier) + TotalHorizontalOffset;
+                var rowPosition = new Vector2(xPos, rowYPosition);
+                var gridData = GenerateGridData(rowIndex + 1, j + 1, rowPosition);
+                _gridDataList.Add(gridData);
+                
+                //Debug
+                var debugBubble = Instantiate(debugBubbleEntityPrefab, rowPosition, Quaternion.identity,
+                    testBubbleParent);
+                debugBubble.SnapToGrid(gridData);
+                gridData.DebugBubbleEntity = debugBubble;
+            }
         }
 
         private float CalculateXStartPosition()
@@ -52,14 +77,22 @@ namespace Game.Scripts.Bubble
 
             if (columnCountIsEven)
                 return (halfColumnInterval - (GameData.BubbleSize * 0.5f)) * -1;
-            
+
             return halfColumnInterval * -1;
+        }
+
+        public void AddRowFromBottom()
+        {
+            var rowYPosition = yStartPosition - (GameData.BubbleSize * rowCount * verticalSpacingMultiplier);
+
+            GenerateRow(rowYPosition, rowCount);
+
+            SwitchZigZagValue();
         }
 
         private GridData GenerateGridData(int row, int column, Vector2 position)
         {
-            var coordinateData = new GridCoordinateData(row, column);
-            var gridData = new GridData(coordinateData, position, GridOccupationStates.Free);
+            var gridData = new GridData(row, column, position, GridOccupationStates.Free);
 
             return gridData;
         }

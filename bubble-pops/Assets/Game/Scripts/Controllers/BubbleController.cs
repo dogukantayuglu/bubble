@@ -26,7 +26,7 @@ namespace Game.Scripts.Controllers
             _gridDataController = gridDataController;
             mergeHandler.Initialize(bubblePool, bubbleThrower.PrepareForThrow);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
-            bubblePool.Initialize(AddActiveBubble, queueAnimationDuration);
+            bubblePool.Initialize(CheckMerge, queueAnimationDuration);
         }
 
         public void ActivateInitThrowBubbles()
@@ -54,7 +54,7 @@ namespace Game.Scripts.Controllers
             var gridDataList = new List<GridData>();
 
             var gridData = _gridDataController.GetFreeGridData();
-            while (gridData.GridCoordinateData.Row <= 4)
+            while (gridData.Row <= 4)
             {
                 gridDataList.Add(gridData);
                 gridData.OccupationState = GridOccupationStates.Occupied;
@@ -69,12 +69,11 @@ namespace Game.Scripts.Controllers
             var bubbleEntity = bubblePool.GetBubbleFromPool();
 
             var bubbleActivationData = new GridActivationData(
-                gridData.GridCoordinateData,
-                gridData.Position,
+                gridData,
                 bubbleValueSo.GetSpawnableValue());
 
             bubbleEntity.ActivateOnGrid(bubbleActivationData);
-            AddActiveBubble(bubbleEntity);
+            mergeHandler.AddActiveBubble(bubbleEntity);
         }
 
         public BubbleEntity GetBubbleForPlayer()
@@ -84,9 +83,10 @@ namespace Game.Scripts.Controllers
             return bubbleEntity;
         }
 
-        private void AddActiveBubble(BubbleEntity bubbleEntity)
+        private void CheckMerge(BubbleEntity bubbleEntity)
         {
             mergeHandler.CheckMerge(bubbleEntity);
+            _gridDataController.RecalculateGrid();
         }
     }
 }

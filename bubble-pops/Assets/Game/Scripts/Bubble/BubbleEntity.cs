@@ -21,7 +21,7 @@ namespace Game.Scripts.Bubble
         private bool _isShooting;
         private Transform _transform;
         private int _value;
-        private GridCoordinateData _gridCoordinateData;
+        private GridData _gridData;
         private Action<BubbleEntity> _onMovementCompleteAction;
 
         public void Initialize(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
@@ -35,8 +35,8 @@ namespace Game.Scripts.Bubble
         public void ActivateOnGrid(GridActivationData gridActivationData)
         {
             SetBubbleValue(gridActivationData.BubbleValueData);
-            _transform.position = gridActivationData.ActivationPosition;
-            _gridCoordinateData = gridActivationData.ActivationCoordinateData;
+            _transform.position = gridActivationData.GridData.Position;
+            _gridData = gridActivationData.GridData;
             gameObject.SetActive(true);
             bubbleAnimation.PlayActivationAnimation();
         }
@@ -63,7 +63,7 @@ namespace Game.Scripts.Bubble
 
         public void GetShotToGrid(GridData targetGrid, Vector3 reflectPoint)
         {
-            _gridCoordinateData = targetGrid.GridCoordinateData;
+            _gridData = targetGrid;
             var targetPosition = targetGrid.Position;
             if (reflectPoint != Vector3.zero)
             {
