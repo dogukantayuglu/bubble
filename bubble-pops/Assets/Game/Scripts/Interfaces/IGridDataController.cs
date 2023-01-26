@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Game.Scripts.Interfaces
 {
-    public interface IGridDataProvider
+    public interface IGridDataController
     {
         GridData GetFreeGridData();
         GridData GetClosestFreeGridData(Vector2 position);
+        void RecalculateGrid();
     }
 }

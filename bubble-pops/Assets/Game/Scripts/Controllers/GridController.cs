@@ -8,16 +8,16 @@ using UnityEngine;
 
 namespace Game.Scripts.Controllers
 {
-    public class GridDataController : MonoBehaviour, IGridDataProvider
+    public class GridController : MonoBehaviour, IGridDataController
     {
-        [SerializeField] private BubbleGridGenerator bubbleGridGenerator;
+        [SerializeField] private GridGenerator gridGenerator;
         [SerializeField] private RectTransform gridBackgroundTransform;
 
         private List<GridData> _gridDataList;
 
         public void Initialize()
         {
-            _gridDataList = bubbleGridGenerator.GenerateGrid();
+            _gridDataList = gridGenerator.GenerateGrid();
             SetGridBackgroundSize();
         }
 
@@ -57,6 +57,11 @@ namespace Game.Scripts.Controllers
             }
 
             return closestGridData;
+        }
+
+        public void RecalculateGrid()
+        {
+            
         }
     }
 }

@@ -21,12 +21,12 @@ namespace Game.Scripts.Data.Bubble
         private IBubbleBuffer _bubbleBuffer;
         private bool _canThrow;
 
-        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataProvider gridDataProvider, float queueAnimDuration)
+        public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataController gridDataController, float queueAnimDuration)
         {
             _queueAnimationDuration = queueAnimDuration;
             _queueStartPosition = throwPositionTransform.position;
             aimHandler.Initialize(this, _queueStartPosition);
-            ghostBubbleHandler.Initialize(gridDataProvider);
+            ghostBubbleHandler.Initialize(gridDataController);
             _bubbleBuffer = bubbleBuffer;
             _bubblesInQueue = new Queue<BubbleEntity>();
             _canThrow = true;

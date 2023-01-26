@@ -19,13 +19,13 @@ namespace Game.Scripts.Controllers
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
         [SerializeField] private float queueAnimationDuration = 0.25f;
 
-        private IGridDataProvider _gridDataProvider;
+        private IGridDataController _gridDataController;
 
-        public void Initialize(IGridDataProvider gridDataProvider)
+        public void Initialize(IGridDataController gridDataController)
         {
-            _gridDataProvider = gridDataProvider;
+            _gridDataController = gridDataController;
             mergeHandler.Initialize(bubblePool, bubbleThrower.PrepareForThrow);
-            bubbleThrower.Initialize(this, gridDataProvider, queueAnimationDuration);
+            bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             bubblePool.Initialize(AddActiveBubble, queueAnimationDuration);
         }
 
@@ -53,12 +53,12 @@ namespace Game.Scripts.Controllers
         {
             var gridDataList = new List<GridData>();
 
-            var gridData = _gridDataProvider.GetFreeGridData();
+            var gridData = _gridDataController.GetFreeGridData();
             while (gridData.GridCoordinateData.Row <= 4)
             {
                 gridDataList.Add(gridData);
                 gridData.OccupationState = GridOccupationStates.Occupied;
-                gridData = _gridDataProvider.GetFreeGridData();
+                gridData = _gridDataController.GetFreeGridData();
             }
 
             return gridDataList;
@@ -84,7 +84,7 @@ namespace Game.Scripts.Controllers
             return bubbleEntity;
         }
 
-        public void AddActiveBubble(BubbleEntity bubbleEntity)
+        private void AddActiveBubble(BubbleEntity bubbleEntity)
         {
             mergeHandler.CheckMerge(bubbleEntity);
         }

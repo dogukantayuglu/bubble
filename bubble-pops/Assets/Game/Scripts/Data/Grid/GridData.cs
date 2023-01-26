@@ -1,4 +1,3 @@
-using System;
 using Game.Scripts.Enums;
 using UnityEngine;
 
@@ -6,7 +5,7 @@ namespace Game.Scripts.Data.Grid
 {
     public class GridData
     {
-        public readonly GridCoordinateData GridCoordinateData;
+        public GridCoordinateData GridCoordinateData;
         public Vector2 Position;
         public GridOccupationStates OccupationState;
 

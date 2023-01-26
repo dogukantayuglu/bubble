@@ -5,7 +5,7 @@ namespace Game.Scripts.Managers
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private GridDataController gridDataController;
+        [SerializeField] private GridController gridController;
         [SerializeField] private BubbleController bubbleController;
         
         private void Awake()
@@ -21,8 +21,8 @@ namespace Game.Scripts.Managers
 
         private void InitializeGame()
         {
-            gridDataController.Initialize();
-            bubbleController.Initialize(gridDataController);
+            gridController.Initialize();
+            bubbleController.Initialize(gridController);
         }
     }
 }

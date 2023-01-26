@@ -291,9 +291,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rowCount: 9
   columnCount: 5
-  yStartPosition: 3
+  yStartPosition: 3.3
   columnZigzagValue: 0.5
   xOffset: 0.25
+  verticalSpacingMultiplier: 0.89
+  horizontalSpacingMultiplier: 1.05
 --- !u!1 &1018333573
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +715,7 @@ MonoBehaviour:
   bubbleValueSo: {fileID: 11400000, guid: d518199651a38c24092f3874fae61058, type: 2}
   bubbleThrower: {fileID: 2119642731}
   massBubbleGenerationInterval: 0.035
+  queueAnimationDuration: 0.25
 --- !u!1 &1575088376
 GameObject:
   m_ObjectHideFlags: 0
@@ -944,7 +947,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b900d1c23418fe44898059caee13ef38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridDataController: {fileID: 2143375434}
+  gridController: {fileID: 2143375434}
   bubbleController: {fileID: 1379306941}
 --- !u!1 &1713609290
 GameObject:
@@ -1396,5 +1399,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88003610c8602fd47a938d411aae2683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubbleGridGenerator: {fileID: 729240317}
+  gridGenerator: {fileID: 729240317}
   gridBackgroundTransform: {fileID: 1281472618}

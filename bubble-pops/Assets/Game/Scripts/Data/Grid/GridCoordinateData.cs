@@ -1,6 +1,6 @@
 namespace Game.Scripts.Data.Grid
 {
-    public struct GridCoordinateData
+    public class GridCoordinateData
     {
         public readonly int Row;
         public readonly int Column;

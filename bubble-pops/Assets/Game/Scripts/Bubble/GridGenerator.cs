@@ -6,13 +6,15 @@ using UnityEngine;
 
 namespace Game.Scripts.Bubble
 {
-    public class BubbleGridGenerator : MonoBehaviour
+    public class GridGenerator : MonoBehaviour
     {
         [SerializeField] private int rowCount = 5;
         [SerializeField] private int columnCount = 5;
         [SerializeField] private float yStartPosition;
         [SerializeField] private float columnZigzagValue = 0.5f;
         [SerializeField] private float xOffset = 0.25f;
+        [SerializeField] private float verticalSpacingMultiplier = 0.9f;
+        [SerializeField] private float horizontalSpacingMultiplier = 1.1f;
 
 
         public List<GridData> GenerateGrid()
@@ -27,11 +29,11 @@ namespace Game.Scripts.Bubble
                 var zigZagMultiplier = i % 2 == 0 ? 1 : 0;
                 var zigZagValue = columnZigzagValue * zigZagMultiplier;
 
-                position.y = yStartPosition - (GameData.BubbleSize * i);
+                position.y = yStartPosition - (GameData.BubbleSize * i * verticalSpacingMultiplier);
 
                 for (var j = 0; j < columnCount; j++)
                 {
-                    position.x = (j * GameData.BubbleSize) + xStartPosition + zigZagValue + xOffset;
+                    position.x = (j * GameData.BubbleSize * horizontalSpacingMultiplier) + xStartPosition + zigZagValue + xOffset;
                     gridDataList.Add(GenerateGridData(i + 1, j + 1, position));
                 }
 
