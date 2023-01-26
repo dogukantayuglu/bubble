@@ -24,7 +24,7 @@ namespace Game.Scripts.Controllers
         public void Initialize(IGridDataController gridDataController)
         {
             _gridDataController = gridDataController;
-            mergeHandler.Initialize(bubblePool, bubbleThrower.PrepareForThrow);
+            mergeHandler.Initialize(bubbleThrower.PrepareForThrow);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             bubblePool.Initialize(CheckMerge, queueAnimationDuration);
         }
@@ -43,9 +43,9 @@ namespace Game.Scripts.Controllers
             for (var i = 0; i < count; i++)
             {
                 var randomGridData = gridDataList[Random.Range(0, gridDataList.Count)];
+                gridDataList.Remove(randomGridData);
                 sequence.AppendCallback(() => GenerateBubbleAtEmptyGrid(randomGridData));
                 sequence.AppendInterval(massBubbleGenerationInterval);
-                gridDataList.Remove(randomGridData);
             }
         }
 

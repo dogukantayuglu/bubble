@@ -1,3 +1,5 @@
+using System;
+using Game.Scripts.Bubble;
 using Game.Scripts.Enums;
 using UnityEngine;
 
@@ -11,15 +13,35 @@ namespace Game.Scripts.Data.Grid
         public GridOccupationStates OccupationState;
         public DebugBubbleEntity DebugBubbleEntity;
 
-        private Vector2 _position;
+        [SerializeField]
+        private BubbleEntity _bubbleEntity;
 
         public GridData(int row, int column, Vector2 position, GridOccupationStates occupationState)
         {
             SetCoordinates(row, column);
-            Position = position;
+            SetPosition(position);
             OccupationState = occupationState;
         }
-        
+
+        public void RegisterBubbleEntity(BubbleEntity bubbleEntity)
+        {
+            _bubbleEntity = bubbleEntity;
+        }
+
+        public void RemoveBubbleFromGrid()
+        {
+            if (_bubbleEntity)
+            {
+                _bubbleEntity.ReturnToPool();
+                _bubbleEntity = null;
+            }
+
+            if (DebugBubbleEntity)
+            {
+                DebugBubbleEntity.GetDestroyed();
+            }
+        }
+
         public void SetCoordinates(int row, int column)
         {
             Row = row;
@@ -29,7 +51,11 @@ namespace Game.Scripts.Data.Grid
         public void SetPosition(Vector2 targetPosition)
         {
             Position = targetPosition;
-            DebugBubbleEntity.SnapToGrid(this);
+            
+            if (DebugBubbleEntity)
+                DebugBubbleEntity.SnapToGrid(this);
+            if (_bubbleEntity)
+                _bubbleEntity.FollowRegisteredGrid(targetPosition);
         }
     }
 }

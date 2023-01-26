@@ -59,7 +59,6 @@ namespace Game.Scripts.Bubble
                 var xPos = (j * GameData.BubbleSize * horizontalSpacingMultiplier) + TotalHorizontalOffset;
                 var rowPosition = new Vector2(xPos, rowYPosition);
                 var gridData = GenerateGridData(rowIndex + 1, j + 1, rowPosition);
-                _gridDataList.Add(gridData);
                 
                 //Debug
                 var debugBubble = Instantiate(debugBubbleEntityPrefab, rowPosition, Quaternion.identity,
@@ -93,6 +92,7 @@ namespace Game.Scripts.Bubble
         private GridData GenerateGridData(int row, int column, Vector2 position)
         {
             var gridData = new GridData(row, column, position, GridOccupationStates.Free);
+            _gridDataList.Add(gridData);
 
             return gridData;
         }

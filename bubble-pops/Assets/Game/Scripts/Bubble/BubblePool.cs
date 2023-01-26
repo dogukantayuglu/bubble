@@ -24,7 +24,7 @@ namespace Game.Scripts.Bubble
             for (var i = 0; i < poolCount; i++)
             {
                 var bubbleEntity = Instantiate(bubbleEntityPrefab, Vector3.zero, Quaternion.identity, poolTransform);
-                bubbleEntity.Initialize(onMovementCompleteAction, queueAnimationDuration);
+                bubbleEntity.Initialize(this, onMovementCompleteAction, queueAnimationDuration);
                 var bubbleGameObject = bubbleEntity.gameObject;
                 bubbleGameObject.SetActive(false);
                 bubbleGameObject.name = $"Bubble {i + 1}";
@@ -39,6 +39,8 @@ namespace Game.Scripts.Bubble
 
         public void ReturnBubbleToPool(BubbleEntity bubbleEntity)
         {
+            bubbleEntity.gameObject.SetActive(false);
+            bubbleEntity.transform.position = Vector3.zero;
             _bubblePool.Push(bubbleEntity);
         }
     }

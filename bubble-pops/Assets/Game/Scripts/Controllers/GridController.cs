@@ -88,15 +88,37 @@ namespace Game.Scripts.Controllers
 
         private void MoveGridToUp()
         {
+            var listToDestroy = new List<GridData>();
             for (var i = 0; i < _gridDataList.Count; i++)
             {
                 var gridData = _gridDataList[i];
                 var position = gridData.Position;
                 position.y += gridGenerator.TotalVerticalSpacing;
-                gridData.SetCoordinates(gridData.Row - 1, gridData.Column);
-                gridData.SetPosition(position);
+                var targetRowIndex = gridData.Row - 1;
+                
+                if (targetRowIndex < 1)
+                {
+                    listToDestroy.Add(gridData);
+                }
+                else
+                {
+                    UpdateGridData(gridData, position);
+                }
+            }
+
+            foreach (var gridData in listToDestroy)
+            {
+                gridData.RemoveBubbleFromGrid();
+                _gridDataList.Remove(gridData);
             }
         }
+
+        private static void UpdateGridData(GridData gridData, Vector2 position)
+        {
+            gridData.SetCoordinates(gridData.Row - 1, gridData.Column);
+            gridData.SetPosition(position);
+        }
+        
 
         private void AddRowFromTop()
         {

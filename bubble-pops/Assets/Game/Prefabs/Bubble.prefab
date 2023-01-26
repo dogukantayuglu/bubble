@@ -52,6 +52,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7206970765324538236}
   valueText: {fileID: 7206970766163943242}
   shootMovementSpeed: 25
+  gridSlideAnimationDuration: 0.3
 --- !u!114 &2918292052127368545
 MonoBehaviour:
   m_ObjectHideFlags: 0

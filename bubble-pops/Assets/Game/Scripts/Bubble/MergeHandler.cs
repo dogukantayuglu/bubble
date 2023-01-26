@@ -8,13 +8,11 @@ namespace Game.Scripts.Bubble
     public class MergeHandler : MonoBehaviour
     {
         private List<BubbleEntity> _bubbleEntitiesOnGrid;
-        private IBubblePool _bubblePool;
         private Action _onMergeComplete;
         
-        public void Initialize(IBubblePool bubblePool, Action onMergeComplete)
+        public void Initialize(Action onMergeComplete)
         {
             _onMergeComplete = onMergeComplete;
-            _bubblePool = bubblePool;
             _bubbleEntitiesOnGrid = new List<BubbleEntity>();
         }
 

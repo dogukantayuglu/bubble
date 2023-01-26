@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b85090f1f73be3b4eb6ea64508ab86a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 1
   coordinateText: {fileID: 4857778009603884624}
 --- !u!212 &7206970765324538236
 SpriteRenderer:
