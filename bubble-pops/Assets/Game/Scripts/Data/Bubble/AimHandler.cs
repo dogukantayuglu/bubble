@@ -50,6 +50,7 @@ namespace Game.Scripts.Data.Bubble
 
             if (Mathf.Abs(direction.x) > XDirectionLimit)
             {
+                _isAiming = false;
                 lineRenderer.enabled = false;
                 return;
             }
