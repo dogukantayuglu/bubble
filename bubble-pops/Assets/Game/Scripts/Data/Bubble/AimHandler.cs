@@ -13,6 +13,7 @@ namespace Game.Scripts.Data.Bubble
         private Vector3 _originPosition;
         private IBubbleThrower _bubbleThrower;
         private const string Reflector = "Reflector";
+        private const float XDirectionLimit = 0.88f;
 
         public void Initialize(IBubbleThrower bubbleThrower, Vector3 originPosition)
         {
@@ -47,7 +48,7 @@ namespace Game.Scripts.Data.Bubble
             _isAiming = true;
             var direction = CalculateDirection();
 
-            if (Mathf.Abs(direction.x) > 0.88f)
+            if (Mathf.Abs(direction.x) > XDirectionLimit)
             {
                 lineRenderer.enabled = false;
                 return;
