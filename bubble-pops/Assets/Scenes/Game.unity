@@ -982,7 +982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridController: {fileID: 2143375434}
   bubbleController: {fileID: 1379306941}
-  debugModeActive: 1
+  gridDebugMode: 1
 --- !u!1 &1680570283
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,6 +1303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c43de8494573d4ca35b9550688434a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mergeDuration: 1
 --- !u!1 &2064274554
 GameObject:
   m_ObjectHideFlags: 0

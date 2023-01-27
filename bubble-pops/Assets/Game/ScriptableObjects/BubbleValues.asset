@@ -43,3 +43,6 @@ MonoBehaviour:
   - value: 1024
     valueText: 1k
     color: {r: 0.6039216, g: 0.43137258, b: 0.81568635, a: 1}
+  - value: 2048
+    valueText: 2k
+    color: {r: 0.44897985, g: 0, b: 1, a: 1}

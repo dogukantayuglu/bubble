@@ -11,10 +11,10 @@ namespace Game.Scripts.Grid
     {
         public int RowCount => rowCount;
         public float TotalVerticalSpacing => GameData.BubbleSize * verticalSpacingMultiplier;
-        public float TotalHorizontalSpacing => GameData.BubbleSize * horizontalSpacingMultiplier;
 
         private float ZigZagValue => _zigZagSwitch ? columnZigzagValue : 0;
         private float TotalHorizontalOffset => _xStartPosition + ZigZagValue + xOffset;
+        private float TotalHorizontalSpacing => GameData.BubbleSize * horizontalSpacingMultiplier;
 
         [SerializeField] private int rowCount = 5;
         [SerializeField] private int columnCount = 5;
@@ -26,17 +26,23 @@ namespace Game.Scripts.Grid
         [SerializeField] private DebugBubbleEntity debugBubbleEntityPrefab;
         [SerializeField] private Transform testBubbleParent;
 
+        private List<GridData> _generatedGridData;
         private List<GridData> _gridDataList;
         private bool _zigZagSwitch;
         private float _xStartPosition;
 
         private void SwitchZigZagValue() => _zigZagSwitch = !_zigZagSwitch;
 
-        public List<GridData> GenerateInitialGrid()
+        public List<GridData> Initialize()
         {
+            _generatedGridData = new List<GridData>();
             _gridDataList = new List<GridData>();
             _xStartPosition = CalculateXStartPosition();
+            return GenerateInitialGrid();
+        }
 
+        private List<GridData> GenerateInitialGrid()
+        {
             var position = new Vector2(_xStartPosition, yStartPosition);
 
             for (var i = 0; i < rowCount; i++)
@@ -50,7 +56,7 @@ namespace Game.Scripts.Grid
                 SwitchZigZagValue();
             }
 
-
+            CalculateNeighbours();
             return _gridDataList;
         }
 
@@ -87,22 +93,53 @@ namespace Game.Scripts.Grid
             var rowYPosition = yStartPosition - (GameData.BubbleSize * rowCount * verticalSpacingMultiplier);
 
             GenerateRow(rowYPosition, rowCount);
+            CalculateNeighbours();
 
             SwitchZigZagValue();
         }
 
-        public void AddRowFromTop()
+        public List<GridData> AddRowFromTop()
         {
+            _generatedGridData.Clear();
             var rowStartPosition = yStartPosition + TotalVerticalSpacing;
             GenerateRow(rowStartPosition, -1);
+            CalculateNeighbours();
 
             SwitchZigZagValue();
+            return _generatedGridData;
+        }
+
+        private void CalculateNeighbours()
+        {
+            foreach (var centerGridData in _gridDataList)
+            {
+                var neighbourList = new List<GridData>();
+                foreach (var gridData in _gridDataList)
+                {
+                    var distance = Vector3.Distance(gridData.Position, centerGridData.Position);
+                    if (distance <= 0) continue;
+                    if (distance <= TotalHorizontalSpacing)
+                    {
+                        neighbourList.Add(gridData);
+                    }
+                }
+
+                centerGridData.SetNeighbourList(neighbourList);
+            }
         }
 
         private GridData GenerateGridData(int row, int column, Vector2 position)
         {
-            var gridData = new GridData(row, column, position, GridOccupationStates.Free);
+            var data = new GridInitializationData(
+                row,
+                column,
+                position,
+                GridOccupationStates.Free);
+
+            var gridData = new GridData(data);
+
             _gridDataList.Add(gridData);
+            _generatedGridData.Add(gridData);
 
             return gridData;
         }

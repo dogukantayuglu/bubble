@@ -14,15 +14,18 @@ namespace Game.Scripts.Controllers
         [SerializeField] private GridMovement gridMovement;
         [SerializeField] private RectTransform gridBackgroundTransform;
 
+        private IBubbleBuffer _bubbleBuffer;
         private List<GridData> _gridDataList;
         private int _maxRowCount;
         private int _minRowCount;
 
-        public void Initialize()
+        public void Initialize(IBubbleBuffer bubbleBuffer)
         {
-            _gridDataList = gridGenerator.GenerateInitialGrid();
             _maxRowCount = gridGenerator.RowCount;
             _minRowCount = gridGenerator.RowCount - 2;
+            
+            _gridDataList = gridGenerator.Initialize();
+            _bubbleBuffer = bubbleBuffer;
             gridMovement.Initialize(_gridDataList, gridGenerator.TotalVerticalSpacing, _maxRowCount);
             SetGridBackgroundSize();
         }
@@ -65,23 +68,6 @@ namespace Game.Scripts.Controllers
             return closestGridData;
         }
 
-        public List<GridData> GetNeighbourGridData(GridData gridDataToCheck)
-        {
-            var neighbourList = new List<GridData>();
-
-            foreach (var gridData in _gridDataList)
-            {
-                var distance = Vector3.Distance(gridData.Position, gridDataToCheck.Position);
-                if (distance <= 0) continue;
-                if (distance <= gridGenerator.TotalHorizontalSpacing)
-                {
-                    neighbourList.Add(gridData);
-                }
-            }
-
-            return neighbourList;
-        }
-
         public void RecalculateGrid()
         {
             var activeRowCount = 0;
@@ -106,7 +92,8 @@ namespace Game.Scripts.Controllers
 
         private void AddRowFromTop()
         {
-            gridGenerator.AddRowFromTop();
+            var generatedList = gridGenerator.AddRowFromTop();
+            _bubbleBuffer.GenerateBubblesForNewGridData(generatedList);
             gridMovement.MoveGridDown();
         }
     }

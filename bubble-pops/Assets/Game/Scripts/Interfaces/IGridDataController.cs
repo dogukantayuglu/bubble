@@ -9,6 +9,5 @@ namespace Game.Scripts.Interfaces
         GridData GetFreeGridData();
         GridData GetClosestFreeGridData(Vector2 position);
         void RecalculateGrid();
-        List<GridData> GetNeighbourGridData(GridData gridDataToCheck);
     }
 }

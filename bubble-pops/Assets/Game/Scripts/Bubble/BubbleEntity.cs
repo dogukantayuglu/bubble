@@ -3,6 +3,7 @@ using DG.Tweening;
 using Game.Scripts.Data.Bubble;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
+using Game.Scripts.Enums;
 using Game.Scripts.Interfaces;
 using Game.Scripts.Managers;
 using TMPro;
@@ -106,10 +107,31 @@ namespace Game.Scripts.Bubble
             _transform.DOMove(_gridData.Position, gridSlideAnimationDuration);
         }
 
+        public void MergeToPosition(Vector3 targetPosition, float duration)
+        {
+            _transform.DOMove(targetPosition, duration).OnComplete(ReturnToPool);
+        }
+        
         public void ReturnToPool()
         {
+            _gridData.OccupationState = GridOccupationStates.Free;
+            _gridData.UnRegisterBubbleEntity(this);
             _gridData = null;
             _bubblePool.ReturnBubbleToPool(this);
+        }
+
+        [ContextMenu("Test")]
+        public void Test()
+        {
+            print($"Position: {_gridData.Position}");
+            print($"Row: {_gridData.Row}");
+            print($"Column: {_gridData.Column}");
+            print($"BubbleEntity: {_gridData.BubbleEntity}");
+            foreach (var gridData in _gridData.NeighbourGridDataList)
+            {
+                print($"Neighbour: {gridData.Row} {gridData.Column}");
+            }
+            print($"OccupationState: {_gridData.OccupationState}");
         }
     }
 }

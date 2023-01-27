@@ -10,7 +10,7 @@ namespace Game.Scripts.Managers
         [SerializeField] private GridController gridController;
         [SerializeField] private BubbleController bubbleController;
         [SerializeField] private bool gridDebugMode;
-        
+
         private void Awake()
         {
             GridDebugMode = gridDebugMode;
@@ -25,7 +25,7 @@ namespace Game.Scripts.Managers
 
         private void InitializeGame()
         {
-            gridController.Initialize();
+            gridController.Initialize(bubbleController);
             bubbleController.Initialize(gridController);
         }
     }

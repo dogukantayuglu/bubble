@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Scripts.Bubble;
 using Game.Scripts.Enums;
 using UnityEngine;
@@ -9,28 +10,35 @@ namespace Game.Scripts.Data.Grid
         public Vector2 Position { get; private set; }
         public int Row { get; private set; }
         public int Column { get; private set; }
+        public BubbleEntity BubbleEntity { get; private set; }
+        public List<GridData> NeighbourGridDataList { get; private set; }
         public GridOccupationStates OccupationState;
         public DebugBubbleEntity DebugBubbleEntity;
-        private BubbleEntity _bubbleEntity;
-
-        public GridData(int row, int column, Vector2 position, GridOccupationStates occupationState)
+        
+        public GridData(GridInitializationData gridInitializationData)
         {
-            SetCoordinates(row, column);
-            SetPosition(position);
-            OccupationState = occupationState;
+            SetCoordinates(gridInitializationData.Row, gridInitializationData.Column);
+            SetPosition(gridInitializationData.Position);
+            OccupationState = gridInitializationData.GridOccupationState;
         }
 
         public void RegisterBubbleEntity(BubbleEntity bubbleEntity)
         {
-            _bubbleEntity = bubbleEntity;
+            BubbleEntity = bubbleEntity;
+        }
+
+        public void UnRegisterBubbleEntity(BubbleEntity bubbleEntity)
+        {
+            if (bubbleEntity != BubbleEntity) return;
+            BubbleEntity = null;
         }
 
         public void RemoveBubbleFromGrid()
         {
-            if (_bubbleEntity)
+            if (BubbleEntity)
             {
-                _bubbleEntity.ReturnToPool();
-                _bubbleEntity = null;
+                BubbleEntity.ReturnToPool();
+                BubbleEntity = null;
             }
 
             if (DebugBubbleEntity)
@@ -39,7 +47,7 @@ namespace Game.Scripts.Data.Grid
             }
         }
 
-        public void  SetCoordinates(int row, int column)
+        public void SetCoordinates(int row, int column)
         {
             Row = row;
             Column = column;
@@ -48,9 +56,14 @@ namespace Game.Scripts.Data.Grid
         public void SetPosition(Vector2 targetPosition)
         {
             Position = targetPosition;
-            
+
             if (DebugBubbleEntity)
                 DebugBubbleEntity.SnapToGrid(this);
+        }
+
+        public void SetNeighbourList(List<GridData> neighbourList)
+        {
+            NeighbourGridDataList = neighbourList;
         }
     }
 }

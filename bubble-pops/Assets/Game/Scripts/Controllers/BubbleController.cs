@@ -25,7 +25,7 @@ namespace Game.Scripts.Controllers
         public void Initialize(IGridDataController gridDataController)
         {
             _gridDataController = gridDataController;
-            mergeHandler.Initialize(_gridDataController, MergeCheckComplete);
+            mergeHandler.Initialize(bubbleValueSo, MergeCheckComplete);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             bubblePool.Initialize(OnBubblePlacedToGrid, queueAnimationDuration);
         }
@@ -74,7 +74,6 @@ namespace Game.Scripts.Controllers
                 bubbleValueSo.GetSpawnableValue());
 
             bubbleEntity.ActivateOnGrid(bubbleActivationData);
-            mergeHandler.AddActiveBubble(bubbleEntity);
         }
 
         public BubbleEntity GetBubbleForPlayer()
@@ -82,6 +81,17 @@ namespace Game.Scripts.Controllers
             var bubbleEntity = bubblePool.GetBubbleFromPool();
             bubbleEntity.SetBubbleValue(bubbleValueSo.GetSpawnableValue());
             return bubbleEntity;
+        }
+
+        public void GenerateBubblesForNewGridData(List<GridData> gridDataList)
+        {
+            foreach (var gridData in gridDataList)
+            {
+                gridData.OccupationState = GridOccupationStates.Occupied;
+                GenerateBubbleAtEmptyGrid(gridData);
+            }
+            
+            gridDataList.Clear();
         }
 
         private void OnBubblePlacedToGrid(BubbleEntity bubbleEntity)
