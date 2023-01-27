@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
 using Game.Scripts.Enums;
+using Game.Scripts.Managers;
 using UnityEngine;
 
 namespace Game.Scripts.Grid
@@ -60,8 +61,8 @@ namespace Game.Scripts.Grid
                 var xPos = (j * GameData.BubbleSize * horizontalSpacingMultiplier) + TotalHorizontalOffset;
                 var rowPosition = new Vector2(xPos, rowYPosition);
                 var gridData = GenerateGridData(rowIndex + 1, j + 1, rowPosition);
-                
-                //Debug
+
+                if (!GameManager.GridDebugMode) continue;
                 var debugBubble = Instantiate(debugBubbleEntityPrefab, rowPosition, Quaternion.identity,
                     testBubbleParent);
                 debugBubble.SnapToGrid(gridData);
@@ -84,9 +85,9 @@ namespace Game.Scripts.Grid
         public void AddRowFromBottom()
         {
             var rowYPosition = yStartPosition - (GameData.BubbleSize * rowCount * verticalSpacingMultiplier);
-            
+
             GenerateRow(rowYPosition, rowCount);
-            
+
             SwitchZigZagValue();
         }
 
@@ -94,7 +95,7 @@ namespace Game.Scripts.Grid
         {
             var rowStartPosition = yStartPosition + TotalVerticalSpacing;
             GenerateRow(rowStartPosition, -1);
-            
+
             SwitchZigZagValue();
         }
 

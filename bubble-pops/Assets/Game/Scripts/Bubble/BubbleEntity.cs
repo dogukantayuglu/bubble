@@ -4,6 +4,7 @@ using Game.Scripts.Data.Bubble;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
 using Game.Scripts.Interfaces;
+using Game.Scripts.Managers;
 using TMPro;
 using UnityEngine;
 
@@ -30,6 +31,9 @@ namespace Game.Scripts.Bubble
         public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
             float queueAnimationDuration)
         {
+            if(GameManager.GridDebugMode)
+                valueText.gameObject.SetActive(false);
+            
             _bubblePool = bubblePool;
             _queueAnimationDuration = queueAnimationDuration;
             _onBubblePlacedToGrid = onBubblePlacedToGrid;
