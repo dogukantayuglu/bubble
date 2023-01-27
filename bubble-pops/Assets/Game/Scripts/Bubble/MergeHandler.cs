@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game.Scripts.Interfaces;
 using UnityEngine;
 
 namespace Game.Scripts.Bubble
@@ -8,10 +9,12 @@ namespace Game.Scripts.Bubble
     {
         private List<BubbleEntity> _bubbleEntitiesOnGrid;
         private Action _onMergeComplete;
+        private IGridDataController _gridDataController;
 
-        public void Initialize(Action onMergeComplete)
+        public void Initialize(IGridDataController gridDataController, Action onMergeComplete)
         {
             _onMergeComplete = onMergeComplete;
+            _gridDataController = gridDataController;
             _bubbleEntitiesOnGrid = new List<BubbleEntity>();
         }
 
@@ -20,9 +23,14 @@ namespace Game.Scripts.Bubble
             _bubbleEntitiesOnGrid.Add(bubbleEntity);
         }
 
-        public void CheckMerge()
+        public void CheckMerge(BubbleEntity bubbleEntity)
         {
-            _onMergeComplete.Invoke();
+            var neighbourList = _gridDataController.GetNeighbourGridData(bubbleEntity.GridData);
+            foreach (var neighbourGrid in neighbourList)
+            {
+                print($"{neighbourGrid.Row} {neighbourGrid.Column}");
+            }
+            // _onMergeComplete.Invoke();
         }
     }
 }

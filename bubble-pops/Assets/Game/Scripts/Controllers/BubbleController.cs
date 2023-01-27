@@ -25,7 +25,7 @@ namespace Game.Scripts.Controllers
         public void Initialize(IGridDataController gridDataController)
         {
             _gridDataController = gridDataController;
-            mergeHandler.Initialize(MergeCheckComplete);
+            mergeHandler.Initialize(_gridDataController, MergeCheckComplete);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             bubblePool.Initialize(OnBubblePlacedToGrid, queueAnimationDuration);
         }
@@ -86,8 +86,7 @@ namespace Game.Scripts.Controllers
 
         private void OnBubblePlacedToGrid(BubbleEntity bubbleEntity)
         {
-            mergeHandler.AddActiveBubble(bubbleEntity);
-            mergeHandler.CheckMerge();
+            mergeHandler.CheckMerge(bubbleEntity);
         }
 
         private void MergeCheckComplete()

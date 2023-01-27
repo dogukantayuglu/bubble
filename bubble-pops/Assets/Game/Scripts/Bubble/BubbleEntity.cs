@@ -12,6 +12,7 @@ namespace Game.Scripts.Bubble
     public class BubbleEntity : MonoBehaviour
     {
         public int Value => _value;
+        public GridData GridData => _gridData;
 
         [SerializeField] private BubbleAnimation bubbleAnimation;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -21,10 +22,10 @@ namespace Game.Scripts.Bubble
 
         private IBubblePool _bubblePool;
         private Action<BubbleEntity> _onBubblePlacedToGrid;
+        private GridData _gridData;
         private Transform _transform;
         private float _queueAnimationDuration;
         private int _value;
-        private GridData _gridData;
 
         public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
             float queueAnimationDuration)

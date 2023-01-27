@@ -65,6 +65,23 @@ namespace Game.Scripts.Controllers
             return closestGridData;
         }
 
+        public List<GridData> GetNeighbourGridData(GridData gridDataToCheck)
+        {
+            var neighbourList = new List<GridData>();
+
+            foreach (var gridData in _gridDataList)
+            {
+                var distance = Vector3.Distance(gridData.Position, gridDataToCheck.Position);
+                if (distance <= 0) continue;
+                if (distance <= gridGenerator.TotalHorizontalSpacing)
+                {
+                    neighbourList.Add(gridData);
+                }
+            }
+
+            return neighbourList;
+        }
+
         public void RecalculateGrid()
         {
             var activeRowCount = 0;
@@ -74,10 +91,10 @@ namespace Game.Scripts.Controllers
                 if (gridData.Row > activeRowCount)
                     activeRowCount = gridData.Row;
             }
-            
-            if(activeRowCount >= _maxRowCount)
+
+            if (activeRowCount >= _maxRowCount)
                 AddRowFromBottom();
-            else if(activeRowCount <= _minRowCount)
+            else if (activeRowCount <= _minRowCount)
                 AddRowFromTop();
         }
 
@@ -86,7 +103,7 @@ namespace Game.Scripts.Controllers
             gridGenerator.AddRowFromBottom();
             gridMovement.MoveGridToUp();
         }
-        
+
         private void AddRowFromTop()
         {
             gridGenerator.AddRowFromTop();

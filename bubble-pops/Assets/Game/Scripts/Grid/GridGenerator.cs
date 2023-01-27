@@ -10,6 +10,7 @@ namespace Game.Scripts.Grid
     {
         public int RowCount => rowCount;
         public float TotalVerticalSpacing => GameData.BubbleSize * verticalSpacingMultiplier;
+        public float TotalHorizontalSpacing => GameData.BubbleSize * horizontalSpacingMultiplier;
 
         private float ZigZagValue => _zigZagSwitch ? columnZigzagValue : 0;
         private float TotalHorizontalOffset => _xStartPosition + ZigZagValue + xOffset;

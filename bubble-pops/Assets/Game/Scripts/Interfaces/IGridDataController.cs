@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Game.Scripts.Data.Grid;
 using UnityEngine;
 
@@ -9,5 +9,6 @@ namespace Game.Scripts.Interfaces
         GridData GetFreeGridData();
         GridData GetClosestFreeGridData(Vector2 position);
         void RecalculateGrid();
+        List<GridData> GetNeighbourGridData(GridData gridDataToCheck);
     }
 }
