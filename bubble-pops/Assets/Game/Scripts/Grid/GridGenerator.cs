@@ -4,7 +4,7 @@ using Game.Scripts.Data.Grid;
 using Game.Scripts.Enums;
 using UnityEngine;
 
-namespace Game.Scripts.Bubble
+namespace Game.Scripts.Grid
 {
     public class GridGenerator : MonoBehaviour
     {

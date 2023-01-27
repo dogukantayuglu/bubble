@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Game.Scripts.Bubble;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
 using Game.Scripts.Enums;
+using Game.Scripts.Grid;
 using Game.Scripts.Interfaces;
 using UnityEngine;
 
@@ -11,6 +11,7 @@ namespace Game.Scripts.Controllers
     public class GridController : MonoBehaviour, IGridDataController
     {
         [SerializeField] private GridGenerator gridGenerator;
+        [SerializeField] private GridMovement gridMovement;
         [SerializeField] private RectTransform gridBackgroundTransform;
 
         private List<GridData> _gridDataList;
@@ -22,6 +23,7 @@ namespace Game.Scripts.Controllers
             _gridDataList = gridGenerator.GenerateInitialGrid();
             _maxRowCount = gridGenerator.RowCount;
             _minRowCount = gridGenerator.RowCount - 2;
+            gridMovement.Initialize(_gridDataList, gridGenerator.TotalVerticalSpacing, _maxRowCount);
             SetGridBackgroundSize();
         }
 
@@ -82,72 +84,13 @@ namespace Game.Scripts.Controllers
         private void AddRowFromBottom()
         {
             gridGenerator.AddRowFromBottom();
-            MoveGridToUp();
+            gridMovement.MoveGridToUp();
         }
         
         private void AddRowFromTop()
         {
             gridGenerator.AddRowFromTop();
-            MoveGridDown();
-        }
-
-        private void MoveGridToUp()
-        {
-            var listToDestroy = new List<GridData>();
-            foreach (var gridData in _gridDataList)
-            {
-                var position = gridData.Position;
-                position.y += gridGenerator.TotalVerticalSpacing;
-                var targetRowIndex = gridData.Row - 1;
-                
-                if (targetRowIndex < 1)
-                {
-                    listToDestroy.Add(gridData);
-                }
-                else
-                {
-                    UpdateGridRow(gridData, position, targetRowIndex);
-                }
-            }
-
-            foreach (var gridData in listToDestroy)
-            {
-                gridData.RemoveBubbleFromGrid();
-                _gridDataList.Remove(gridData);
-            }
-        }
-
-        private void MoveGridDown()
-        {
-            var listToDestroy = new List<GridData>();
-            
-            foreach (var gridData in _gridDataList)
-            {
-                var position = gridData.Position;
-                position.y -= gridGenerator.TotalVerticalSpacing;
-                var targetRowIndex = gridData.Row + 1;
-                
-                if (targetRowIndex > _maxRowCount)
-                {
-                    listToDestroy.Add(gridData);
-                }
-                else
-                {
-                    UpdateGridRow(gridData, position, targetRowIndex);
-                }
-            }
-
-            foreach (var gridData in listToDestroy)
-            {
-                gridData.RemoveBubbleFromGrid();
-                _gridDataList.Remove(gridData);
-            }
-        }
-
-        private void UpdateGridRow(GridData gridData, Vector2 position, int row)
-        {
-            gridData.SetCoordinates(row, gridData.Column);
-            gridData.SetPosition(position);
+            gridMovement.MoveGridDown();
         }
     }
 }
