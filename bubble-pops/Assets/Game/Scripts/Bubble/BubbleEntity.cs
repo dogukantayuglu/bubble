@@ -20,18 +20,18 @@ namespace Game.Scripts.Bubble
         [SerializeField] private float gridSlideAnimationDuration = 0.5f;
 
         private IBubblePool _bubblePool;
-        private Action<BubbleEntity> _onMovementCompleteAction;
+        private Action<BubbleEntity> _onBubblePlacedToGrid;
         private Transform _transform;
         private float _queueAnimationDuration;
         private int _value;
         private GridData _gridData;
 
-        public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onMovementCompleteAction,
+        public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
             float queueAnimationDuration)
         {
             _bubblePool = bubblePool;
             _queueAnimationDuration = queueAnimationDuration;
-            _onMovementCompleteAction = onMovementCompleteAction;
+            _onBubblePlacedToGrid = onBubblePlacedToGrid;
             _transform = transform;
             bubbleAnimation.Initialize();
         }
@@ -75,14 +75,19 @@ namespace Game.Scripts.Bubble
             {
                 MoveToPosition(reflectPoint).OnComplete(() =>
                 {
-                    MoveToPosition(targetPosition).OnComplete(() => _onMovementCompleteAction.Invoke(this));
+                    MoveToPosition(targetPosition).OnComplete(InvokePlacedOnGridAction);
                 });
             }
 
             else
             {
-                MoveToPosition(targetPosition).OnComplete(() => _onMovementCompleteAction.Invoke(this));
+                MoveToPosition(targetPosition).OnComplete(InvokePlacedOnGridAction);
             }
+        }
+
+        private void InvokePlacedOnGridAction()
+        {
+            _onBubblePlacedToGrid.Invoke(this);
         }
 
         private Tween MoveToPosition(Vector3 position)

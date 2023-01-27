@@ -20,9 +20,8 @@ namespace Game.Scripts.Bubble
             _bubbleEntitiesOnGrid.Add(bubbleEntity);
         }
 
-        public void CheckMerge(BubbleEntity bubbleEntity)
+        public void CheckMerge()
         {
-            AddActiveBubble(bubbleEntity);
             _onMergeComplete.Invoke();
         }
     }

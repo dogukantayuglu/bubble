@@ -13,20 +13,20 @@ namespace Game.Scripts.Bubble
 
         private Stack<BubbleEntity> _bubblePool;
 
-        public void Initialize(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
+        public void Initialize(Action<BubbleEntity> onBubblePlacedToGrid, float queueAnimationDuration)
         {
             ActiveBubbleEntities = new List<BubbleEntity>();
             _bubblePool = new Stack<BubbleEntity>();
-            PoolBubbleEntities(onMovementCompleteAction, queueAnimationDuration);
+            PoolBubbleEntities(onBubblePlacedToGrid, queueAnimationDuration);
         }
 
-        private void PoolBubbleEntities(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
+        private void PoolBubbleEntities(Action<BubbleEntity> onBubblePlacedToGrid, float queueAnimationDuration)
         {
             var poolTransform = transform;
             for (var i = 0; i < poolCount; i++)
             {
                 var bubbleEntity = Instantiate(bubbleEntityPrefab, Vector3.zero, Quaternion.identity, poolTransform);
-                bubbleEntity.Initialize(this, onMovementCompleteAction, queueAnimationDuration);
+                bubbleEntity.Initialize(this, onBubblePlacedToGrid, queueAnimationDuration);
                 var bubbleGameObject = bubbleEntity.gameObject;
                 bubbleGameObject.SetActive(false);
                 bubbleGameObject.name = $"Bubble {i + 1}";
