@@ -83,9 +83,17 @@ namespace Game.Scripts.Bubble
         public void AddRowFromBottom()
         {
             var rowYPosition = yStartPosition - (GameData.BubbleSize * rowCount * verticalSpacingMultiplier);
-
+            
             GenerateRow(rowYPosition, rowCount);
+            
+            SwitchZigZagValue();
+        }
 
+        public void AddRowFromTop()
+        {
+            var rowStartPosition = yStartPosition + TotalVerticalSpacing;
+            GenerateRow(rowStartPosition, -1);
+            
             SwitchZigZagValue();
         }
 

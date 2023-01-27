@@ -84,6 +84,12 @@ namespace Game.Scripts.Controllers
             gridGenerator.AddRowFromBottom();
             MoveGridToUp();
         }
+        
+        private void AddRowFromTop()
+        {
+            gridGenerator.AddRowFromTop();
+            MoveGridDown();
+        }
 
         private void MoveGridToUp()
         {
@@ -100,7 +106,7 @@ namespace Game.Scripts.Controllers
                 }
                 else
                 {
-                    UpdateGridData(gridData, position);
+                    UpdateGridRow(gridData, position, targetRowIndex);
                 }
             }
 
@@ -111,16 +117,37 @@ namespace Game.Scripts.Controllers
             }
         }
 
-        private static void UpdateGridData(GridData gridData, Vector2 position)
+        private void MoveGridDown()
         {
-            gridData.SetCoordinates(gridData.Row - 1, gridData.Column);
-            gridData.SetPosition(position);
-        }
-        
+            var listToDestroy = new List<GridData>();
+            
+            foreach (var gridData in _gridDataList)
+            {
+                var position = gridData.Position;
+                position.y -= gridGenerator.TotalVerticalSpacing;
+                var targetRowIndex = gridData.Row + 1;
+                
+                if (targetRowIndex > _maxRowCount)
+                {
+                    listToDestroy.Add(gridData);
+                }
+                else
+                {
+                    UpdateGridRow(gridData, position, targetRowIndex);
+                }
+            }
 
-        private void AddRowFromTop()
+            foreach (var gridData in listToDestroy)
+            {
+                gridData.RemoveBubbleFromGrid();
+                _gridDataList.Remove(gridData);
+            }
+        }
+
+        private void UpdateGridRow(GridData gridData, Vector2 position, int row)
         {
-            print("Top");
+            gridData.SetCoordinates(row, gridData.Column);
+            gridData.SetPosition(position);
         }
     }
 }
