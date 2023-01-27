@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Game.Scripts.Interfaces;
 using UnityEngine;
 
 namespace Game.Scripts.Bubble
@@ -9,7 +8,7 @@ namespace Game.Scripts.Bubble
     {
         private List<BubbleEntity> _bubbleEntitiesOnGrid;
         private Action _onMergeComplete;
-        
+
         public void Initialize(Action onMergeComplete)
         {
             _onMergeComplete = onMergeComplete;

@@ -12,8 +12,6 @@ namespace Game.Scripts.Data.Grid
         public int Column { get; private set; }
         public GridOccupationStates OccupationState;
         public DebugBubbleEntity DebugBubbleEntity;
-
-        [SerializeField]
         private BubbleEntity _bubbleEntity;
 
         public GridData(int row, int column, Vector2 position, GridOccupationStates occupationState)
@@ -42,7 +40,7 @@ namespace Game.Scripts.Data.Grid
             }
         }
 
-        public void SetCoordinates(int row, int column)
+        public void  SetCoordinates(int row, int column)
         {
             Row = row;
             Column = column;
@@ -54,8 +52,6 @@ namespace Game.Scripts.Data.Grid
             
             if (DebugBubbleEntity)
                 DebugBubbleEntity.SnapToGrid(this);
-            if (_bubbleEntity)
-                _bubbleEntity.FollowRegisteredGrid(targetPosition);
         }
     }
 }

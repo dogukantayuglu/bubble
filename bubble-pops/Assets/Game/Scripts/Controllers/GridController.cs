@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Game.Scripts.Bubble;
 using Game.Scripts.Data.Game;
@@ -83,15 +84,13 @@ namespace Game.Scripts.Controllers
         {
             gridGenerator.AddRowFromBottom();
             MoveGridToUp();
-            print("Bottom");
         }
 
         private void MoveGridToUp()
         {
             var listToDestroy = new List<GridData>();
-            for (var i = 0; i < _gridDataList.Count; i++)
+            foreach (var gridData in _gridDataList)
             {
-                var gridData = _gridDataList[i];
                 var position = gridData.Position;
                 position.y += gridGenerator.TotalVerticalSpacing;
                 var targetRowIndex = gridData.Row - 1;

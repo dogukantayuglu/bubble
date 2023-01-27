@@ -90,9 +90,10 @@ namespace Game.Scripts.Bubble
             return _transform.DOMove(position, shootMovementSpeed).SetSpeedBased();
         }
 
-        public void FollowRegisteredGrid(Vector3 position)
+        public void ReAlignToGridPosition()
         {
-            _transform.DOMove(position, gridSlideAnimationDuration);
+            if (_gridData == null) return;
+            _transform.DOMove(_gridData.Position, gridSlideAnimationDuration);
         }
 
         public void ReturnToPool()

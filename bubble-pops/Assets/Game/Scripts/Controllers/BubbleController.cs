@@ -7,6 +7,7 @@ using Game.Scripts.Enums;
 using Game.Scripts.Interfaces;
 using Game.Scripts.ScriptableObjects;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Scripts.Controllers
 {
@@ -24,7 +25,7 @@ namespace Game.Scripts.Controllers
         public void Initialize(IGridDataController gridDataController)
         {
             _gridDataController = gridDataController;
-            mergeHandler.Initialize(bubbleThrower.PrepareForThrow);
+            mergeHandler.Initialize(MergeCheckComplete);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             bubblePool.Initialize(CheckMerge, queueAnimationDuration);
         }
@@ -86,7 +87,18 @@ namespace Game.Scripts.Controllers
         private void CheckMerge(BubbleEntity bubbleEntity)
         {
             mergeHandler.CheckMerge(bubbleEntity);
+        }
+
+        private void MergeCheckComplete()
+        {
             _gridDataController.RecalculateGrid();
+            
+            foreach (var activeBubbleEntity in bubblePool.ActiveBubbleEntities)
+            {
+                activeBubbleEntity.ReAlignToGridPosition();
+            }
+
+            DOVirtual.DelayedCall(queueAnimationDuration + 0.1f, bubbleThrower.PrepareForThrow);
         }
     }
 }

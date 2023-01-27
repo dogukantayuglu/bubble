@@ -7,6 +7,7 @@ namespace Game.Scripts.Bubble
 {
     public class BubblePool : MonoBehaviour, IBubblePool
     {
+        public List<BubbleEntity> ActiveBubbleEntities { get; private set; }
         [SerializeField] private BubbleEntity bubbleEntityPrefab;
         [SerializeField] private int poolCount;
 
@@ -14,6 +15,7 @@ namespace Game.Scripts.Bubble
 
         public void Initialize(Action<BubbleEntity> onMovementCompleteAction, float queueAnimationDuration)
         {
+            ActiveBubbleEntities = new List<BubbleEntity>();
             _bubblePool = new Stack<BubbleEntity>();
             PoolBubbleEntities(onMovementCompleteAction, queueAnimationDuration);
         }
@@ -34,13 +36,16 @@ namespace Game.Scripts.Bubble
 
         public BubbleEntity GetBubbleFromPool()
         {
-            return _bubblePool.Pop();
+            var bubbleEntity = _bubblePool.Pop();
+            ActiveBubbleEntities.Add(bubbleEntity);
+            return bubbleEntity;
         }
 
         public void ReturnBubbleToPool(BubbleEntity bubbleEntity)
         {
             bubbleEntity.gameObject.SetActive(false);
             bubbleEntity.transform.position = Vector3.zero;
+            ActiveBubbleEntities.Remove(bubbleEntity);
             _bubblePool.Push(bubbleEntity);
         }
     }
