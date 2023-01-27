@@ -38,6 +38,7 @@ namespace Game.Scripts.Data.Bubble
                 _isAiming = false;
                 lineRenderer.enabled = false;
                 _bubbleThrower.ThrowBubble(_reflectPoint);
+                _bubbleThrower.DeactivateGhostBubble();
             }
         }
 

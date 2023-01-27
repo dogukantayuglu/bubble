@@ -52,7 +52,6 @@ namespace Game.Scripts.Data.Bubble
             var targetGridData = ghostBubbleHandler.TargetGridData;
             targetGridData.OccupationState = GridOccupationStates.Occupied;
             bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
-            ghostBubbleHandler.DeactivateGhostBubble();
         }
 
         private void IterateQueue()
