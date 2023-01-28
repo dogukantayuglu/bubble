@@ -9,6 +9,7 @@ namespace Game.Scripts
     {
         [SerializeField] private bool isActive;
         [SerializeField] private TextMeshPro coordinateText;
+        [SerializeField] private TextMeshPro safeText;
 
         public void SnapToGrid(GridData gridData)
         {
@@ -19,6 +20,11 @@ namespace Game.Scripts
         private void SetCoordinate(GridData gridData)
         {
             coordinateText.text = $"{gridData.Row} {gridData.Column}";
+        }
+
+        public void SetIsConnected(bool isConnected)
+        {
+            safeText.text = isConnected ? "C" : "U";
         }
 
         public void GetDestroyed()

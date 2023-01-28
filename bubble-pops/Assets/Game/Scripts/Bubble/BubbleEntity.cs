@@ -13,6 +13,16 @@ namespace Game.Scripts.Bubble
 {
     public class BubbleEntity : MonoBehaviour
     {
+        public bool IsConnectedToGrid
+        {
+            get => _isConnected;
+            set
+            {
+                _isConnected = value;
+                _gridData?.DebugBubbleEntity.SetIsConnected(value);
+            }
+        }
+
         public int Value => _value;
         public GridData GridData => _gridData;
 
@@ -28,6 +38,7 @@ namespace Game.Scripts.Bubble
         private Transform _transform;
         private float _queueAnimationDuration;
         private int _value;
+        private bool _isConnected;
 
         public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
             float queueAnimationDuration)
@@ -120,18 +131,9 @@ namespace Game.Scripts.Bubble
             _bubblePool.ReturnBubbleToPool(this);
         }
 
-        [ContextMenu("Test")]
-        public void Test()
+        public void DropFromGrid()
         {
-            print($"Position: {_gridData.Position}");
-            print($"Row: {_gridData.Row}");
-            print($"Column: {_gridData.Column}");
-            print($"BubbleEntity: {_gridData.BubbleEntity}");
-            foreach (var gridData in _gridData.NeighbourGridDataList)
-            {
-                print($"Neighbour: {gridData.Row} {gridData.Column}");
-            }
-            print($"OccupationState: {_gridData.OccupationState}");
+            ReturnToPool();
         }
     }
 }

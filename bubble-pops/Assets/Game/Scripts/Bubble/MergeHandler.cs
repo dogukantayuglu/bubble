@@ -9,25 +9,27 @@ namespace Game.Scripts.Bubble
     public class MergeHandler : MonoBehaviour
     {
         [SerializeField] private float mergeDuration = 0.7f;
+        [SerializeField] private IntegrityChecker integrityChecker;
 
         private BubbleValueSo _bubbleValueSo;
         private Action _onMergeComplete;
         private List<BubbleEntity> _bubblesToCheck;
         private List<BubbleEntity> _bubblesToMerge;
 
-        public void Initialize(BubbleValueSo bubbleValueSo, Action onMergeComplete)
+        public void Initialize(List<BubbleEntity> activeBubbles, BubbleValueSo bubbleValueSo, Action onMergeComplete)
         {
             _bubbleValueSo = bubbleValueSo;
             _onMergeComplete = onMergeComplete;
             _bubblesToCheck = new List<BubbleEntity>();
             _bubblesToMerge = new List<BubbleEntity>();
+            integrityChecker.Initialize(activeBubbles);
         }
 
         public void CheckMerge(BubbleEntity bubbleEntity)
         {
             _bubblesToCheck.Clear();
             _bubblesToMerge.Clear();
-            
+
             _bubblesToMerge.Add(bubbleEntity);
             _bubblesToCheck.Add(bubbleEntity);
 
@@ -53,6 +55,7 @@ namespace Game.Scripts.Bubble
             {
                 finalValue *= 2;
             }
+
             finalValue = Mathf.Clamp(finalValue, 2, 2048);
             return finalValue;
         }
@@ -64,14 +67,20 @@ namespace Game.Scripts.Bubble
             bubbleToMerge.SetBubbleValue(bubbleValueData);
 
             var mergePosition = bubbleToMerge.GridData.Position;
-            
+
             foreach (var bubbleEntity in _bubblesToMerge)
             {
                 if (bubbleEntity.Equals(bubbleToMerge)) continue;
                 bubbleEntity.MergeToPosition(mergePosition, mergeDuration);
             }
 
-            DOVirtual.DelayedCall(mergeDuration, () => CheckMerge(bubbleToMerge));
+            DOVirtual.DelayedCall(mergeDuration, () => RestartCheckMergeSequence(bubbleToMerge));
+        }
+
+        private void RestartCheckMergeSequence(BubbleEntity lastMergedBubble)
+        {
+            integrityChecker.CheckIntegrity();
+            CheckMerge(lastMergedBubble);
         }
 
         private void GenerateMergeList()

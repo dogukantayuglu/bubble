@@ -68,7 +68,7 @@ namespace Game.Scripts.Controllers
             return closestGridData;
         }
 
-        public void RecalculateGrid()
+        public void CheckGridPopulation()
         {
             var activeRowCount = 0;
             foreach (var gridData in _gridDataList)

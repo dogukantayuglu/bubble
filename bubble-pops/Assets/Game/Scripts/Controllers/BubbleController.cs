@@ -20,14 +20,17 @@ namespace Game.Scripts.Controllers
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
         [SerializeField] private float queueAnimationDuration = 0.25f;
 
+        private List<BubbleEntity> _activeBubbleEntities;
         private IGridDataController _gridDataController;
 
         public void Initialize(IGridDataController gridDataController)
         {
+            _activeBubbleEntities = new List<BubbleEntity>();
             _gridDataController = gridDataController;
-            mergeHandler.Initialize(bubbleValueSo, MergeCheckComplete);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
-            bubblePool.Initialize(OnBubblePlacedToGrid, queueAnimationDuration);
+            mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete);
+            bubblePool.Initialize(StartMergeSequence, queueAnimationDuration);
+            bubblePool.OnBubbleReturnedPool += RemoveBubbleFromActiveList;
         }
 
         public void ActivateInitThrowBubbles()
@@ -68,6 +71,7 @@ namespace Game.Scripts.Controllers
         private void GenerateBubbleAtEmptyGrid(GridData gridData)
         {
             var bubbleEntity = bubblePool.GetBubbleFromPool();
+            _activeBubbleEntities.Add(bubbleEntity);
 
             var bubbleActivationData = new GridActivationData(
                 gridData,
@@ -94,21 +98,32 @@ namespace Game.Scripts.Controllers
             gridDataList.Clear();
         }
 
-        private void OnBubblePlacedToGrid(BubbleEntity bubbleEntity)
+        private void StartMergeSequence(BubbleEntity bubbleEntity)
         {
+            _activeBubbleEntities.Add(bubbleEntity);
             mergeHandler.CheckMerge(bubbleEntity);
         }
 
         private void MergeCheckComplete()
         {
-            _gridDataController.RecalculateGrid();
+            _gridDataController.CheckGridPopulation();
             
-            foreach (var activeBubbleEntity in bubblePool.ActiveBubbleEntities)
+            foreach (var activeBubbleEntity in _activeBubbleEntities)
             {
                 activeBubbleEntity.ReAlignToGridPosition();
             }
 
             DOVirtual.DelayedCall(queueAnimationDuration + 0.1f, bubbleThrower.PrepareForThrow);
+        }
+
+        private void RemoveBubbleFromActiveList(BubbleEntity bubbleEntity)
+        {
+            _activeBubbleEntities.Remove(bubbleEntity);
+        }
+
+        private void OnDisable()
+        {
+            bubblePool.OnBubbleReturnedPool -= RemoveBubbleFromActiveList;
         }
     }
 }

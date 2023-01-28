@@ -8,6 +8,6 @@ namespace Game.Scripts.Interfaces
     {
         GridData GetFreeGridData();
         GridData GetClosestFreeGridData(Vector2 position);
-        void RecalculateGrid();
+        void CheckGridPopulation();
     }
 }

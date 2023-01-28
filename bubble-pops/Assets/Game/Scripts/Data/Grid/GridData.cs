@@ -30,6 +30,7 @@ namespace Game.Scripts.Data.Grid
         public void UnRegisterBubbleEntity(BubbleEntity bubbleEntity)
         {
             if (bubbleEntity != BubbleEntity) return;
+            DebugBubbleEntity.SetIsConnected(true);
             BubbleEntity = null;
         }
 
@@ -38,7 +39,6 @@ namespace Game.Scripts.Data.Grid
             if (BubbleEntity)
             {
                 BubbleEntity.ReturnToPool();
-                BubbleEntity = null;
             }
 
             if (DebugBubbleEntity)
