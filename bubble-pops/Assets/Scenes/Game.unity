@@ -231,6 +231,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 491289210}
   m_CullTransparentMesh: 1
+--- !u!1 &596489159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 596489160}
+  - component: {fileID: 596489161}
+  m_Layer: 0
+  m_Name: ActiveBubbleSorter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &596489160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596489159}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1379306940}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &596489161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596489159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1dcba80d25e2914a871b6f9caf5cc92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &613415599
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99b437ee8c942444a219b635528d124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bubblesToDrop: []
+  _activeBubblesEntities: []
 --- !u!1 &668669376
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,6 +817,7 @@ Transform:
   - {fileID: 1018333574}
   - {fileID: 2119642730}
   - {fileID: 2037270402}
+  - {fileID: 596489160}
   m_Father: {fileID: 1663153880}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -790,8 +835,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mergeHandler: {fileID: 2037270403}
   bubblePool: {fileID: 1018333575}
-  bubbleValueSo: {fileID: 11400000, guid: d518199651a38c24092f3874fae61058, type: 2}
   bubbleThrower: {fileID: 2119642731}
+  activeBubbleSorter: {fileID: 596489161}
+  bubbleValueSo: {fileID: 11400000, guid: d518199651a38c24092f3874fae61058, type: 2}
   massBubbleGenerationInterval: 0.035
   queueAnimationDuration: 0.25
 --- !u!1 &1575088376
@@ -1349,7 +1395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c43de8494573d4ca35b9550688434a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mergeDuration: 1
+  mergeDuration: 0.23
   integrityChecker: {fileID: 613415601}
 --- !u!1 &2064274554
 GameObject:
