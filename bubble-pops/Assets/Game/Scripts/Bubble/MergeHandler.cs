@@ -124,16 +124,12 @@ namespace Game.Scripts.Bubble
             }
 
             if (bubbleToMerge) return bubbleToMerge;
-            
+
             bubbleToMerge = FindHighestBubble();
-            while (GetForeignNeighbourCountOfBubble(bubbleToMerge) < 1)
-            {
-                FindHighestBubble();
-            }
 
             return bubbleToMerge;
         }
-        
+
 
         private BubbleEntity FindHighestBubble()
         {
@@ -146,23 +142,8 @@ namespace Game.Scripts.Bubble
                 highestBubble = bubbleEntity;
                 highestRow = row;
             }
-            
+
             return highestBubble;
-        }
-
-        private int GetForeignNeighbourCountOfBubble(BubbleEntity selectedBubble)
-        {
-            var neighbourCount = 0;
-            foreach (var gridData in selectedBubble.GridData.NeighbourGridDataList)
-            {
-                if (_bubblesToMerge.Contains(gridData.BubbleEntity)) continue;
-                if (gridData.OccupationState == GridOccupationStates.Occupied)
-                {
-                    neighbourCount++;
-                }
-            }
-
-            return neighbourCount;
         }
     }
 }

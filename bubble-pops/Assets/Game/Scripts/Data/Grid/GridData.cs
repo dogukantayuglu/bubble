@@ -7,6 +7,7 @@ namespace Game.Scripts.Data.Grid
 {
     public class GridData
     {
+        public int GridCoordinateValue => (Row + Column) * Row * Row;
         public Vector2 Position { get; private set; }
         public int Row { get; private set; }
         public int Column { get; private set; }

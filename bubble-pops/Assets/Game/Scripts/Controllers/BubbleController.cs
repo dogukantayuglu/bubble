@@ -15,8 +15,9 @@ namespace Game.Scripts.Controllers
     {
         [SerializeField] private MergeHandler mergeHandler;
         [SerializeField] private BubblePool bubblePool;
-        [SerializeField] private BubbleValueSo bubbleValueSo;
         [SerializeField] private BubbleThrower bubbleThrower;
+        [SerializeField] private ActiveBubbleSorter activeBubbleSorter;
+        [SerializeField] private BubbleValueSo bubbleValueSo;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
         [SerializeField] private float queueAnimationDuration = 0.25f;
 
@@ -27,6 +28,7 @@ namespace Game.Scripts.Controllers
         {
             _activeBubbleEntities = new List<BubbleEntity>();
             _gridDataController = gridDataController;
+            activeBubbleSorter.Initialize(_activeBubbleEntities);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete);
             bubblePool.Initialize(StartMergeSequence, queueAnimationDuration);
@@ -51,6 +53,8 @@ namespace Game.Scripts.Controllers
                 sequence.AppendCallback(() => GenerateBubbleAtEmptyGrid(randomGridData));
                 sequence.AppendInterval(massBubbleGenerationInterval);
             }
+            
+            sequence.AppendCallback(activeBubbleSorter.Sort);
         }
 
         private List<GridData> GetInitRowsDataList()
@@ -64,7 +68,7 @@ namespace Game.Scripts.Controllers
                 gridData.OccupationState = GridOccupationStates.Occupied;
                 gridData = _gridDataController.GetFreeGridData();
             }
-
+            
             return gridDataList;
         }
 
@@ -95,6 +99,7 @@ namespace Game.Scripts.Controllers
                 GenerateBubbleAtEmptyGrid(gridData);
             }
             
+            activeBubbleSorter.Sort();
             gridDataList.Clear();
         }
 
