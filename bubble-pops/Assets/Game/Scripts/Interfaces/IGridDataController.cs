@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Scripts.Data.Grid;
+﻿using Game.Scripts.Data.Grid;
 using UnityEngine;
 
 namespace Game.Scripts.Interfaces

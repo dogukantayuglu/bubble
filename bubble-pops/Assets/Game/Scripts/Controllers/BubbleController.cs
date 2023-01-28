@@ -30,7 +30,7 @@ namespace Game.Scripts.Controllers
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete);
             bubblePool.Initialize(StartMergeSequence, queueAnimationDuration);
-            bubblePool.OnBubbleReturnedPool += RemoveBubbleFromActiveList;
+            bubblePool.OnBubbleDetachedFromGrid += RemoveBubbleFromActiveList;
         }
 
         public void ActivateInitThrowBubbles()
@@ -123,7 +123,7 @@ namespace Game.Scripts.Controllers
 
         private void OnDisable()
         {
-            bubblePool.OnBubbleReturnedPool -= RemoveBubbleFromActiveList;
+            bubblePool.OnBubbleDetachedFromGrid -= RemoveBubbleFromActiveList;
         }
     }
 }

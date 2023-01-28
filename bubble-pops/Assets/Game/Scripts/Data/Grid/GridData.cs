@@ -14,7 +14,7 @@ namespace Game.Scripts.Data.Grid
         public List<GridData> NeighbourGridDataList { get; private set; }
         public GridOccupationStates OccupationState;
         public DebugBubbleEntity DebugBubbleEntity;
-        
+
         public GridData(GridInitializationData gridInitializationData)
         {
             SetCoordinates(gridInitializationData.Row, gridInitializationData.Column);
@@ -30,15 +30,16 @@ namespace Game.Scripts.Data.Grid
         public void UnRegisterBubbleEntity(BubbleEntity bubbleEntity)
         {
             if (bubbleEntity != BubbleEntity) return;
-            DebugBubbleEntity.SetIsConnected(true);
             BubbleEntity = null;
+            if (DebugBubbleEntity)
+                DebugBubbleEntity.SetIsConnected(true);
         }
 
         public void RemoveBubbleFromGrid()
         {
             if (BubbleEntity)
             {
-                BubbleEntity.ReturnToPool();
+                BubbleEntity.OnGridDestroyed();
             }
 
             if (DebugBubbleEntity)

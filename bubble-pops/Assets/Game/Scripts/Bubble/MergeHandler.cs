@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game.Scripts.Enums;
 using Game.Scripts.ScriptableObjects;
 using UnityEngine;
 
@@ -27,6 +28,12 @@ namespace Game.Scripts.Bubble
 
         public void CheckMerge(BubbleEntity bubbleEntity)
         {
+            if (bubbleEntity.GridData == null)
+            {
+                _onMergeComplete.Invoke();
+                return;
+            }
+
             _bubblesToCheck.Clear();
             _bubblesToMerge.Clear();
 
@@ -74,14 +81,11 @@ namespace Game.Scripts.Bubble
                 bubbleEntity.MergeToPosition(mergePosition, mergeDuration);
             }
 
-            DOVirtual.DelayedCall(mergeDuration, () => RestartCheckMergeSequence(bubbleToMerge));
+            integrityChecker.CheckIntegrity();
+            DOVirtual.DelayedCall(mergeDuration + mergeDuration * 0.1f,
+                () => CheckMerge(bubbleToMerge));
         }
 
-        private void RestartCheckMergeSequence(BubbleEntity lastMergedBubble)
-        {
-            integrityChecker.CheckIntegrity();
-            CheckMerge(lastMergedBubble);
-        }
 
         private void GenerateMergeList()
         {
@@ -119,19 +123,22 @@ namespace Game.Scripts.Bubble
                 }
             }
 
-            if (!bubbleToMerge)
+            if (bubbleToMerge) return bubbleToMerge;
+            
+            bubbleToMerge = FindHighestBubble();
+            while (GetForeignNeighbourCountOfBubble(bubbleToMerge) < 1)
             {
-                bubbleToMerge = FindHighestBubble();
+                FindHighestBubble();
             }
 
             return bubbleToMerge;
         }
+        
 
         private BubbleEntity FindHighestBubble()
         {
             var highestBubble = _bubblesToMerge[0];
             var highestRow = highestBubble.GridData.Row;
-
             foreach (var bubbleEntity in _bubblesToMerge)
             {
                 var row = bubbleEntity.GridData.Row;
@@ -139,8 +146,23 @@ namespace Game.Scripts.Bubble
                 highestBubble = bubbleEntity;
                 highestRow = row;
             }
-
+            
             return highestBubble;
+        }
+
+        private int GetForeignNeighbourCountOfBubble(BubbleEntity selectedBubble)
+        {
+            var neighbourCount = 0;
+            foreach (var gridData in selectedBubble.GridData.NeighbourGridDataList)
+            {
+                if (_bubblesToMerge.Contains(gridData.BubbleEntity)) continue;
+                if (gridData.OccupationState == GridOccupationStates.Occupied)
+                {
+                    neighbourCount++;
+                }
+            }
+
+            return neighbourCount;
         }
     }
 }

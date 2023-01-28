@@ -8,18 +8,23 @@ using Game.Scripts.Interfaces;
 using Game.Scripts.Managers;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Scripts.Bubble
 {
     public class BubbleEntity : MonoBehaviour
     {
+        public Action<BubbleEntity> OnBubbleDetachedFromGrid;
+
         public bool IsConnectedToGrid
         {
             get => _isConnected;
             set
             {
                 _isConnected = value;
-                _gridData?.DebugBubbleEntity.SetIsConnected(value);
+                if (_gridData == null) return;
+                if (_gridData.DebugBubbleEntity)
+                    _gridData.DebugBubbleEntity.SetIsConnected(value);
             }
         }
 
@@ -32,6 +37,10 @@ namespace Game.Scripts.Bubble
         [SerializeField] private float shootMovementSpeed = 15f;
         [SerializeField] private float gridSlideAnimationDuration = 0.5f;
 
+        [SerializeField] private float fallXPositionRandomAmount = 0.5f;
+        [SerializeField] private float fallJumpRandomAmount = 0.5f;
+        [SerializeField] private float dropDuration = 1f;
+
         private IBubblePool _bubblePool;
         private Action<BubbleEntity> _onBubblePlacedToGrid;
         private GridData _gridData;
@@ -43,9 +52,9 @@ namespace Game.Scripts.Bubble
         public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
             float queueAnimationDuration)
         {
-            if(GameManager.GridDebugMode)
+            if (GameManager.GridDebugMode)
                 valueText.gameObject.SetActive(false);
-            
+
             _bubblePool = bubblePool;
             _queueAnimationDuration = queueAnimationDuration;
             _onBubblePlacedToGrid = onBubblePlacedToGrid;
@@ -120,20 +129,59 @@ namespace Game.Scripts.Bubble
 
         public void MergeToPosition(Vector3 targetPosition, float duration)
         {
+            DetachFromGridData();
             _transform.DOMove(targetPosition, duration).OnComplete(ReturnToPool);
         }
-        
-        public void ReturnToPool()
+
+        private void ReturnToPool()
         {
-            _gridData.OccupationState = GridOccupationStates.Free;
-            _gridData.UnRegisterBubbleEntity(this);
-            _gridData = null;
             _bubblePool.ReturnBubbleToPool(this);
         }
 
         public void DropFromGrid()
         {
+            DetachFromGridData();
+            var currentPosition = _transform.position;
+            var randomXTarget = currentPosition.x +
+                                Random.Range(-fallXPositionRandomAmount, fallXPositionRandomAmount);
+            var randomJumpPower = Random.Range(0, fallJumpRandomAmount);
+            var targetPosition = new Vector3(randomXTarget, -6, currentPosition.z);
+            _transform.DOJump(targetPosition, randomJumpPower, 1, dropDuration).OnComplete(ReturnToPool);
+        }
+
+        public void OnGridDestroyed()
+        {
+            DetachFromGridData();
             ReturnToPool();
+        }
+
+        private void DetachFromGridData()
+        {
+            _gridData.OccupationState = GridOccupationStates.Free;
+            _gridData.UnRegisterBubbleEntity(this);
+            _gridData = null;
+            OnBubbleDetachedFromGrid?.Invoke(this);
+        }
+
+        [ContextMenu("PrintGridData")]
+        public void PrintGridData()
+        {
+            print($"{_gridData.Row} {_gridData.Column}");
+            print($"{_gridData.BubbleEntity}");
+            print($"_IsConnected: {_gridData.BubbleEntity.IsConnectedToGrid}");
+            print($"{_gridData.OccupationState}");
+            foreach (var data in _gridData.NeighbourGridDataList)
+            {
+                print("Neighbour");
+                print($"{data.Row} {data.Column}");
+                if (data.BubbleEntity)
+                {
+                    print($"{data.BubbleEntity}");
+                    print($"_IsConnected: {data.BubbleEntity.IsConnectedToGrid}");
+                }
+                print($"{data.OccupationState}");
+                print("------------------");
+            }
         }
     }
 }
