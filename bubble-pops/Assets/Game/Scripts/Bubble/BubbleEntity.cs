@@ -90,6 +90,7 @@ namespace Game.Scripts.Bubble
         public void MoveToMergePosition(Vector3 targetPosition, float duration)
         {
             DetachFromGridData();
+            bubbleAnimation.PlayBubbleParticle();
             bubbleMovement.MoveToMergePosition(targetPosition, duration).OnComplete(ReturnToPool);
             bubbleVisual.FadeOut(duration);
         }
@@ -109,6 +110,7 @@ namespace Game.Scripts.Bubble
         public void GetAffectedFromExplosion(Vector3 explosionOrigin)
         {
             DetachFromGridData();
+            bubbleAnimation.PlayBubbleParticle();
             bubbleAnimation.PlayAffectionFromExplosionAnimation(explosionOrigin).OnComplete(ReturnToPool);
         }
 

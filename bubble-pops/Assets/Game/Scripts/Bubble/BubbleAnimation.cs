@@ -23,6 +23,9 @@ namespace Game.Scripts.Bubble
         [SerializeField] private float affectedAnimationDuration = 0.7f;
         [SerializeField] private float movementMultiplier = 1.4f;
 
+        [Header("Particle")] 
+        [SerializeField] private ParticleSystem bubbleParticle;
+
         private float _explosionDuration = 0.8f;
         private Transform _transform;
 
@@ -62,6 +65,14 @@ namespace Game.Scripts.Bubble
             var targetPosition = currentPosition + (direction * movementMultiplier);
             _transform.DOMove(targetPosition, affectedAnimationDuration).SetEase(Ease.OutCirc);
             return _transform.DOScale(Vector3.zero, affectedAnimationDuration);
+        }
+
+        public void PlayBubbleParticle()
+        {
+            bubbleParticle.transform.parent = null;
+            bubbleParticle.Play();
+            var duration = bubbleParticle.main.duration;
+            DOVirtual.DelayedCall(duration, () => bubbleParticle.transform.parent = _transform);
         }
     }
 }

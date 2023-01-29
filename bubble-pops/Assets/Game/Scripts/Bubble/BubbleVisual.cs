@@ -11,6 +11,7 @@ namespace Game.Scripts.Bubble
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private TextMeshPro valueText;
         [SerializeField] private GameObject outerCircle;
+        [SerializeField] private ParticleSystem bubbleParticle;
 
         private Vector3 _initOuterCircleScale;
         
@@ -26,6 +27,7 @@ namespace Game.Scripts.Bubble
         {
             outerCircle.transform.localScale = _initOuterCircleScale;
             spriteRenderer.color = bubbleValueData.color;
+            SetBubbleParticleColor(bubbleValueData.color);
             valueText.text = $"{bubbleValueData.valueText}";
             valueText.DOFade(1, 0.1f);
             outerCircle.gameObject.SetActive(bubbleValueData.value > 512);
@@ -35,6 +37,12 @@ namespace Game.Scripts.Bubble
         {
             spriteRenderer.DOFade(0.5f, duration);
             valueText.DOFade(0, duration - (duration * 0.5f));
+        }
+
+        private void SetBubbleParticleColor(Color color)
+        {
+            var main = bubbleParticle.main;
+            main.startColor = color;
         }
     }
 }
