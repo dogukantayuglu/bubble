@@ -7,6 +7,8 @@ namespace Game.Scripts.Controllers
     {
         [SerializeField] private PopupTextPool popupTextPool;
 
+        private PopupTextEntity _activePopupTextEntity;
+        
         public void Initialize()
         {
             popupTextPool.Initialize();
@@ -25,8 +27,13 @@ namespace Game.Scripts.Controllers
 
         private void PlayPopupText(string text)
         {
-            var popupTextEntity = popupTextPool.GetPopupTextFromPopTextEntity();
-            popupTextEntity.PlayTextAnimation(text);
+            if (_activePopupTextEntity)
+            {
+                _activePopupTextEntity.StopAnimation();
+                _activePopupTextEntity = null;
+            }
+            _activePopupTextEntity = popupTextPool.GetPopupTextFromPopTextEntity();
+            _activePopupTextEntity.PlayTextAnimation(text);
         }
     }
 }
