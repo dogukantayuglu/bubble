@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Inspector
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 21
+  controlID: 123
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 101
+  controlID: 124
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 102
+  controlID: 125
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -426,9 +426,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: f0600000
-      m_LastClickedID: 24816
-      m_ExpandedIDs: 1e55ffffe656ffff806effff4488ffff8c88ffff9489ffff2afbffff7260000092600000a0600000ba600000d2600000f6600000
+      m_SelectedIDs: 482bfcff
+      m_LastClickedID: -251064
+      m_ExpandedIDs: 4af2fdff8cf4fdff4ebbfefff89bffffa29cffffc49cffff4c9dffff909dfffff69dffff3a9effff7e9effff04cfffff4eddffff2afbffff92600000ba600000c0600000d260000016890000568900007a890000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -732,9 +732,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.82975376, y: 0.5251498, z: 0.18196815}
+    m_Target: {x: -0.49880195, y: 1.7938406, z: 0.092272475}
     speed: 2
-    m_Value: {x: -0.82975376, y: 0.5251498, z: 0.18196815}
+    m_Value: {x: -0.49880195, y: 1.7938406, z: 0.092272475}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -785,9 +785,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 1.0240173
+    m_Target: 3.9161744
     speed: 2
-    m_Value: 1.0240173
+    m_Value: 3.9161744
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -805,7 +805,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: -0.08559045, y: 0.051385216, z: -0.004420244, w: -0.9949971}
+  m_LastSceneViewRotation: {x: -0.16260979, y: 0.50531006, z: -0.097605914, w: -0.841843}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
@@ -853,22 +853,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Game/Prefabs
+    - Assets/Game/Scripts/Controllers
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Game/Prefabs
+  - Assets/Game/Scripts/Controllers
   m_LastFoldersGridSize: -1
   m_LastProjectPath: X:\GameDev\bubble\bubble-pops
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 38680000
-    m_LastClickedID: 26680
-    m_ExpandedIDs: 00000000ae610000b0610000b26100001062000000ca9a3b
+    scrollPos: {x: 0, y: 111}
+    m_SelectedIDs: 08620000
+    m_LastClickedID: 25096
+    m_ExpandedIDs: 00000000ae610000b0610000b2610000fe610000ca6a0000d66e0000f67200006c730000a678000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -924,7 +924,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: c6230000b065000000000000646a0000
+    m_ExpandedInstanceIDs: c6230000b065000000000000646a00007e610000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

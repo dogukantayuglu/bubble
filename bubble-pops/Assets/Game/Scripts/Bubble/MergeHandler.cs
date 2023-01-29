@@ -8,6 +8,8 @@ namespace Game.Scripts.Bubble
 {
     public class MergeHandler : MonoBehaviour
     {
+        public Action<int> OnNewMergeStarted;
+        
         [SerializeField] private float mergeDuration = 0.7f;
         [SerializeField] private IntegrityChecker integrityChecker;
 
@@ -16,6 +18,7 @@ namespace Game.Scripts.Bubble
         private List<BubbleEntity> _bubblesToCheck;
         private List<BubbleEntity> _bubblesToMerge;
         private float _explosionDuration;
+        private int _mergeCount;
 
         public void Initialize(List<BubbleEntity> activeBubbles, BubbleValueSo bubbleValueSo, Action onMergeComplete,
             float explosionDuration)
@@ -28,33 +31,55 @@ namespace Game.Scripts.Bubble
             integrityChecker.Initialize(activeBubbles);
         }
 
-        public void CheckMerge(BubbleEntity bubbleEntity)
+        public void CheckMerge(BubbleEntity lastMovedBubbleEntity)
         {
-            if (bubbleEntity.GridData == null)
+            if (lastMovedBubbleEntity.GridData == null)
             {
-                _onMergeComplete.Invoke();
+                EndMerge();
                 return;
             }
 
+            GenerateMergeList(lastMovedBubbleEntity);
+
+            if (_bubblesToMerge.Count < 2)
+            {
+                EndMerge();
+                return;
+            }
+
+            CheckMergeCount();
+            var finalValue = CalculateValueAfterMerge(lastMovedBubbleEntity.Value);
+            MergeBubbles(finalValue);
+        }
+
+        private void GenerateMergeList(BubbleEntity lastMovedBubbleEntity)
+        {
             _bubblesToCheck.Clear();
             _bubblesToMerge.Clear();
 
-            _bubblesToMerge.Add(bubbleEntity);
-            _bubblesToCheck.Add(bubbleEntity);
+            _bubblesToMerge.Add(lastMovedBubbleEntity);
+            _bubblesToCheck.Add(lastMovedBubbleEntity);
 
             while (_bubblesToCheck.Count > 0)
             {
                 GenerateMergeList();
             }
+        }
 
-            if (_bubblesToMerge.Count < 2)
+        private void CheckMergeCount()
+        {
+            _mergeCount++;
+
+            if (_mergeCount > 1)
             {
-                _onMergeComplete.Invoke();
-                return;
+                OnNewMergeStarted?.Invoke(_mergeCount);
             }
+        }
 
-            var finalValue = CalculateValueAfterMerge(bubbleEntity.Value);
-            MergeBubbles(finalValue);
+        private void EndMerge()
+        {
+            _mergeCount = 0;
+            _onMergeComplete.Invoke();
         }
 
         private int CalculateValueAfterMerge(int bubbleValue)

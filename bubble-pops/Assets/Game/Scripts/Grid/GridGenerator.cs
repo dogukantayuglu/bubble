@@ -10,6 +10,7 @@ namespace Game.Scripts.Grid
     public class GridGenerator : MonoBehaviour
     {
         public int RowCount => rowCount;
+        public int ColumnCount => columnCount;
         public float TotalVerticalSpacing => GameData.BubbleSize * verticalSpacingMultiplier;
 
         private float ZigZagValue => _zigZagSwitch ? columnZigzagValue : 0;

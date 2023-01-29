@@ -9,6 +9,7 @@ namespace Game.Scripts.Managers
         
         [SerializeField] private GridController gridController;
         [SerializeField] private BubbleController bubbleController;
+        [SerializeField] private UiController uiController;
         [SerializeField] private bool gridDebugMode;
 
         private void Awake()
@@ -16,17 +17,46 @@ namespace Game.Scripts.Managers
             GridDebugMode = gridDebugMode;
             InitializeGame();
         }
+        
+        private void InitializeGame()
+        {
+            bubbleController.Initialize(gridController);
+            gridController.Initialize(bubbleController);
+            uiController.Initialize();
+            SubscribeToActions();
+        }
 
+        private void SubscribeToActions()
+        {
+            bubbleController.OnNewMergeStarted += HandleNewMerge;
+            gridController.OnAllGridCleared += HandleAllGridCleared;
+        }
+        
         private void Start()
         {
             bubbleController.GenerateBubblesForStart();
             bubbleController.ActivateInitThrowBubbles();
         }
 
-        private void InitializeGame()
+        private void HandleNewMerge(int mergeCount)
         {
-            gridController.Initialize(bubbleController);
-            bubbleController.Initialize(gridController);
+            uiController.ShowMergePopupText(mergeCount);
+        }
+
+        private void HandleAllGridCleared()
+        {
+            uiController.ShowPerfectPopupText();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeToActions();
+        }
+
+        private void UnsubscribeToActions()
+        {
+            gridController.OnAllGridCleared -= HandleAllGridCleared;
+            bubbleController.OnNewMergeStarted -= HandleNewMerge;
         }
     }
 }

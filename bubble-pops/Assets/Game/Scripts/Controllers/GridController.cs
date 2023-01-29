@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
@@ -10,6 +11,8 @@ namespace Game.Scripts.Controllers
 {
     public class GridController : MonoBehaviour, IGridDataController
     {
+        public Action OnAllGridCleared;
+        
         [SerializeField] private GridGenerator gridGenerator;
         [SerializeField] private GridMovement gridMovement;
         [SerializeField] private RectTransform gridBackgroundTransform;
@@ -70,12 +73,20 @@ namespace Game.Scripts.Controllers
 
         public void CheckGridPopulation()
         {
+            var occupiedGridCount = 0;
             var activeRowCount = 0;
             foreach (var gridData in _gridDataList)
             {
                 if (gridData.OccupationState != GridOccupationStates.Occupied) continue;
+                occupiedGridCount++;
                 if (gridData.Row > activeRowCount)
                     activeRowCount = gridData.Row;
+            }
+
+            if (occupiedGridCount < gridGenerator.ColumnCount)
+            {
+                HandleAllGridCleared();
+                return;
             }
 
             if (activeRowCount >= _maxRowCount)
@@ -95,6 +106,16 @@ namespace Game.Scripts.Controllers
             var generatedList = gridGenerator.AddRowFromTop();
             _bubbleBuffer.GenerateBubblesForNewGridData(generatedList);
             gridMovement.MoveGridDown();
+        }
+
+        private void HandleAllGridCleared()
+        {
+            OnAllGridCleared?.Invoke();
+
+            for (var i = 0; i < 4; i++)
+            {
+                AddRowFromTop();
+            }
         }
     }
 }

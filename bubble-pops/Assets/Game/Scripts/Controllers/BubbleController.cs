@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Scripts.Bubble;
@@ -13,6 +14,8 @@ namespace Game.Scripts.Controllers
 {
     public class BubbleController : MonoBehaviour, IBubbleBuffer
     {
+        public Action<int> OnNewMergeStarted;
+
         [SerializeField] private MergeHandler mergeHandler;
         [SerializeField] private BubblePool bubblePool;
         [SerializeField] private BubbleThrower bubbleThrower;
@@ -34,6 +37,7 @@ namespace Game.Scripts.Controllers
             mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete, explosionHandler.ExplosionDuration);
             bubblePool.Initialize(StartMergeSequence, queueAnimationDuration, explosionHandler.ExplosionDuration);
             explosionHandler.Initialize(_activeBubbleEntities);
+            mergeHandler.OnNewMergeStarted += NotifyNewMergeStarted;
         }
 
         public void ActivateInitThrowBubbles()
@@ -143,8 +147,20 @@ namespace Game.Scripts.Controllers
             _activeBubbleEntities.Remove(bubbleEntity);
         }
 
+        private void NotifyNewMergeStarted(int mergeCount)
+        {
+            OnNewMergeStarted?.Invoke(mergeCount);
+        }
+
         private void OnDisable()
         {
+            UnsubscribeActions();
+        }
+
+        private void UnsubscribeActions()
+        {
+            mergeHandler.OnNewMergeStarted -= NotifyNewMergeStarted;
+
             foreach (var activeBubbleEntity in _activeBubbleEntities)
             {
                 activeBubbleEntity.OnBubbleDetachedFromGrid -= RemoveBubbleFromActiveList;
