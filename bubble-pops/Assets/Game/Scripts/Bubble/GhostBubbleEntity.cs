@@ -49,7 +49,9 @@ namespace Game.Scripts.Bubble
             SetColor();
             _currentState = GhostBubbleStates.Activating;
             _currentGridData = gridData;
-            _transform.position = gridData.Position;
+            var targetPosition = (Vector3)gridData.Position;
+            targetPosition.z = 0.0001f;
+            _transform.position = targetPosition;
             _transform.DOScale(Vector3.one * GameData.BubbleSize, animationDuration).OnComplete(SetStateActive);
         }
 

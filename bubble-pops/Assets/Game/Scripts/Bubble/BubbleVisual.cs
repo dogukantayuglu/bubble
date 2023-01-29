@@ -35,7 +35,7 @@ namespace Game.Scripts.Bubble
         
         public void FadeOut(float duration)
         {
-            spriteRenderer.DOFade(0.5f, duration);
+            spriteRenderer.DOFade(0.3f, duration);
             valueText.DOFade(0, duration - (duration * 0.5f));
         }
 
