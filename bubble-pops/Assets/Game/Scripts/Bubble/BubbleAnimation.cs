@@ -16,8 +16,10 @@ namespace Game.Scripts.Bubble
 
         [Header("Explode")]
         [SerializeField] private float outerCircleLocalScale = 1f;
+        [SerializeField] private float circleExpandSpeed = 20f;
         [SerializeField] private Transform outerCircleTransform;
-        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer circleSpriteRenderer;
+        [SerializeField] private SpriteRenderer outerCircleSpriteRenderer;
 
         [Header("DestroyByExplosion")] 
         [SerializeField] private float affectedAnimationDuration = 0.7f;
@@ -59,8 +61,10 @@ namespace Game.Scripts.Bubble
 
         public Tween PlayExplodeAnimation()
         {
-            spriteRenderer.DOFade(0f, _explosionDuration); 
-            return outerCircleTransform.DOScale(Vector3.one * outerCircleLocalScale, _explosionDuration);
+            outerCircleTransform.DOScale(Vector3.one * outerCircleLocalScale, circleExpandSpeed).SetSpeedBased();
+
+            outerCircleSpriteRenderer.DOFade(0f, _explosionDuration);
+            return circleSpriteRenderer.DOFade(0f, _explosionDuration); 
         }
 
         public Tween PlayAffectionFromExplosionAnimation(Vector3 explosionOrigin)

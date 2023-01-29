@@ -15,6 +15,7 @@ namespace Game.Scripts.Controllers
     public class BubbleController : MonoBehaviour, IBubbleBuffer
     {
         public Action<int> OnNewMergeStarted;
+        public Action OnBubbleExploded;
 
         [SerializeField] private MergeHandler mergeHandler;
         [SerializeField] private BubblePool bubblePool;
@@ -128,6 +129,7 @@ namespace Game.Scripts.Controllers
 
         private void HandleBubbleExplosion(BubbleEntity explodedBubbleEntity)
         {
+            OnBubbleExploded?.Invoke();
             explosionHandler.HandleBubbleExplosion(explodedBubbleEntity);
         }
 

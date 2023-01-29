@@ -155,9 +155,11 @@ MonoBehaviour:
   fallXPositionRandomAmount: 1
   fallJumpRandomAmount: 5
   dropDuration: 1
-  outerCircleLocalScale: 0.8
+  outerCircleLocalScale: 20
+  circleExpandSpeed: 15
   outerCircleTransform: {fileID: 933900343559399009}
-  spriteRenderer: {fileID: 4564448236964659771}
+  circleSpriteRenderer: {fileID: 4564448236964659771}
+  outerCircleSpriteRenderer: {fileID: 2884954701306880809}
   affectedAnimationDuration: 0.7
   explosionMovementMagnitude: 1.4
   bounceMagnitude: 0.13

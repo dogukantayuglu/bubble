@@ -9,6 +9,7 @@ namespace Game.Scripts.Managers
         
         [SerializeField] private GridController gridController;
         [SerializeField] private BubbleController bubbleController;
+        [SerializeField] private CameraController cameraController;
         [SerializeField] private UiController uiController;
         [SerializeField] private bool gridDebugMode;
 
@@ -22,6 +23,7 @@ namespace Game.Scripts.Managers
         {
             bubbleController.Initialize(gridController);
             gridController.Initialize(bubbleController);
+            cameraController.Initialize();
             uiController.Initialize();
             SubscribeToActions();
         }
@@ -30,6 +32,7 @@ namespace Game.Scripts.Managers
         {
             bubbleController.OnNewMergeStarted += HandleNewMerge;
             gridController.OnAllGridCleared += HandleAllGridCleared;
+            bubbleController.OnBubbleExploded += ShakeCamera;
         }
         
         private void Start()
@@ -48,6 +51,11 @@ namespace Game.Scripts.Managers
             uiController.ShowPerfectPopupText();
         }
 
+        private void ShakeCamera()
+        {
+            cameraController.ShakeCamera();
+        }
+
         private void OnDisable()
         {
             UnsubscribeToActions();
@@ -57,6 +65,7 @@ namespace Game.Scripts.Managers
         {
             gridController.OnAllGridCleared -= HandleAllGridCleared;
             bubbleController.OnNewMergeStarted -= HandleNewMerge;
+            bubbleController.OnBubbleExploded -= ShakeCamera;
         }
     }
 }
