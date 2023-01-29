@@ -119,12 +119,12 @@ namespace Game.Scripts.Grid
                 {
                     var distance = Vector3.Distance(gridData.Position, centerGridData.Position);
                     if (distance <= 0) continue;
-                    if (distance <= TotalHorizontalSpacing)
+                    if (distance <= TotalHorizontalSpacing + 0.1f)
                     {
                         neighbourList.Add(gridData);
                     }
                 }
-
+                
                 centerGridData.SetNeighbourList(neighbourList);
             }
         }
