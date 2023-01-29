@@ -12,9 +12,9 @@ namespace Game.Scripts.Ui
 
         [Header("Animation Values")] [SerializeField]
         private float anchoredStartPosition = -45f;
-
         [SerializeField] private float verticalMovementSpeed = 50f;
         [SerializeField] private float movementYTarget = 350f;
+        [SerializeField] private float animationDuration = 1f;
 
         private Action<PopupTextEntity> _returnToPoolAction;
 
@@ -40,13 +40,15 @@ namespace Game.Scripts.Ui
 
         public void PlayTextAnimation(string text)
         {
+            textMeshProUGUI.DOFade(1, 0);
             textMeshProUGUI.text = text;
             gameObject.SetActive(true);
-            rectTransform.DOAnchorPosY(movementYTarget, verticalMovementSpeed).SetSpeedBased()
-                .OnComplete(StopAnimation);
+            rectTransform.DOAnchorPosY(movementYTarget, verticalMovementSpeed).SetEase(Ease.OutCirc)
+                .SetSpeedBased();
+            textMeshProUGUI.DOFade(0, animationDuration).OnComplete(StopAnimation);
         }
 
-        private void StopAnimation()
+        public void StopAnimation()
         {
             rectTransform.DOKill();
             Reset();
