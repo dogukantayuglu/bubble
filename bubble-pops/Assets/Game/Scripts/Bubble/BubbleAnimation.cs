@@ -21,7 +21,12 @@ namespace Game.Scripts.Bubble
 
         [Header("DestroyByExplosion")] 
         [SerializeField] private float affectedAnimationDuration = 0.7f;
-        [SerializeField] private float movementMultiplier = 1.4f;
+        [SerializeField] private float explosionMovementMagnitude = 1.4f;
+
+        [Header("Bounce")] 
+        [SerializeField] private float bounceMagnitude = 0.5f;
+        [SerializeField] private float bounceDuration = 0.3f;
+        [SerializeField] private Transform bubbleVisualTransform;
 
         [Header("Particle")] 
         [SerializeField] private ParticleSystem bubbleParticle;
@@ -62,7 +67,7 @@ namespace Game.Scripts.Bubble
         {
             var currentPosition = _transform.position;
             var direction = (currentPosition - explosionOrigin).normalized;
-            var targetPosition = currentPosition + (direction * movementMultiplier);
+            var targetPosition = currentPosition + (direction * explosionMovementMagnitude);
             _transform.DOMove(targetPosition, affectedAnimationDuration).SetEase(Ease.OutCirc);
             return _transform.DOScale(Vector3.zero, affectedAnimationDuration);
         }
@@ -73,6 +78,20 @@ namespace Game.Scripts.Bubble
             bubbleParticle.Play();
             var duration = bubbleParticle.main.duration;
             DOVirtual.DelayedCall(duration, () => bubbleParticle.transform.parent = _transform);
+        }
+
+        public void PlayBounceAnimation(Vector3 originPosition)
+        {
+            var currentPosition = _transform.position;
+            var direction = (currentPosition - originPosition).normalized;
+            direction.z = 0f;
+            direction *= bounceMagnitude;
+            // print($"{gameObject.name} - {direction.x} : {direction.y} : {direction.z}");
+            var halfBounceDuration = bounceDuration * 0.5f;
+            bubbleVisualTransform.DOLocalMove(direction, halfBounceDuration).OnComplete(() =>
+            {
+                bubbleVisualTransform.DOLocalMove(Vector3.zero, halfBounceDuration);
+            });
         }
     }
 }

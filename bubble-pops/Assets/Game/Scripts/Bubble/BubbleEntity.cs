@@ -41,6 +41,7 @@ namespace Game.Scripts.Bubble
         {
             _bubblePool = bubblePool;
             _transform = transform;
+            onBubblePlacedToGrid += MakeNeighboursBounce;
             bubbleMovement.Initialize(queueAnimationDuration, onBubblePlacedToGrid, this);
             bubbleAnimation.Initialize(explosionDuration);
             bubbleVisual.Initialize();
@@ -80,7 +81,24 @@ namespace Game.Scripts.Bubble
             GridData.RegisterBubbleEntity(this);
             bubbleMovement.GetShotToGrid(targetGrid, reflectPoint);
         }
-        
+
+        private void MakeNeighboursBounce(BubbleEntity placedBubble)
+        {
+            if (GridData == null) return;
+            
+            foreach (var neighbourData in GridData.NeighbourGridDataList)
+            {
+                var bubbleEntity = neighbourData.BubbleEntity;
+                if (bubbleEntity)
+                    bubbleEntity.BounceFrom(placedBubble.GridData.Position);
+            }
+        }
+
+        private void BounceFrom(Vector3 originPoint)
+        {
+            bubbleAnimation.PlayBounceAnimation(originPoint);
+        }
+
         public void ReAlignToGridPosition()
         {
             if (GridData == null) return;
@@ -94,7 +112,7 @@ namespace Game.Scripts.Bubble
             bubbleMovement.MoveToMergePosition(targetPosition, duration).OnComplete(ReturnToPool);
             bubbleVisual.FadeOut(duration);
         }
-        
+
         public void PrepareToGetMerged(float duration)
         {
             bubbleMovement.ComeForward(duration);
@@ -106,7 +124,7 @@ namespace Game.Scripts.Bubble
             OnBubbleExploded?.Invoke(this);
             DetachFromGridData();
         }
-        
+
         public void GetAffectedFromExplosion(Vector3 explosionOrigin)
         {
             DetachFromGridData();
