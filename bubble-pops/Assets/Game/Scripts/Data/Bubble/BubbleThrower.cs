@@ -53,10 +53,21 @@ namespace Game.Scripts.Data.Bubble
         {
             if (!_canThrow) return;
             _canThrow = false;
-            var bubbleEntity = _bubblesInQueue.Dequeue();
             var targetGridData = ghostBubbleHandler.TargetGridData;
+            if (targetGridData == null)
+            {
+                CancelThrow();
+                return;
+            }
+            var bubbleEntity = _bubblesInQueue.Dequeue();
             targetGridData.OccupationState = GridOccupationStates.Occupied;
             bubbleEntity.GetShotToGrid(targetGridData, reflectPoint);
+        }
+
+        private void CancelThrow()
+        {
+            ghostBubbleHandler.DeactivateGhostBubble();
+            _canThrow = true;
         }
 
         private void IterateQueue()
