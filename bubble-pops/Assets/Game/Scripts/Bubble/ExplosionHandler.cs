@@ -5,8 +5,11 @@ namespace Game.Scripts.Bubble
 {
     public class ExplosionHandler : MonoBehaviour
     {
+        public float ExplosionDuration => explosionDuration;
+        
         [SerializeField] private int explosionRowRange = 1;
         [SerializeField] private int explosionColumnRange = 3;
+        [SerializeField] private float explosionDuration = 0.8f;
         
         private List<BubbleEntity> _activeBubbleEntities;
         private List<BubbleEntity> _bubblesToExplode;

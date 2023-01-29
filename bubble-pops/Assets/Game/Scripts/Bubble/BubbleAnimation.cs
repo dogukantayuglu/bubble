@@ -14,8 +14,7 @@ namespace Game.Scripts.Bubble
         [SerializeField] private float fallJumpRandomAmount = 5f;
         [SerializeField] private float dropDuration = 1f;
 
-        [Header("Explode")] 
-        [SerializeField] private float explosionDuration = 0.8f;
+        [Header("Explode")]
         [SerializeField] private float outerCircleLocalScale = 1f;
         [SerializeField] private Transform outerCircleTransform;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -24,12 +23,14 @@ namespace Game.Scripts.Bubble
         [SerializeField] private float affectedAnimationDuration = 0.7f;
         [SerializeField] private float movementMultiplier = 1.4f;
 
+        private float _explosionDuration = 0.8f;
         private Transform _transform;
 
-        public void Initialize()
+        public void Initialize(float explosionDuration)
         {
             _transform = transform;
             _transform.localScale = Vector3.zero;
+            _explosionDuration = explosionDuration;
         }
 
         public void ActivationAnimation(bool smallSize = false)
@@ -50,8 +51,8 @@ namespace Game.Scripts.Bubble
 
         public Tween PlayExplodeAnimation()
         {
-            spriteRenderer.DOFade(0f, explosionDuration); 
-            return outerCircleTransform.DOScale(Vector3.one * outerCircleLocalScale, explosionDuration);
+            spriteRenderer.DOFade(0f, _explosionDuration); 
+            return outerCircleTransform.DOScale(Vector3.one * outerCircleLocalScale, _explosionDuration);
         }
 
         public Tween PlayAffectionFromExplosionAnimation(Vector3 explosionOrigin)

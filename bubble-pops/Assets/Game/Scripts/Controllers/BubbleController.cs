@@ -31,8 +31,8 @@ namespace Game.Scripts.Controllers
             _gridDataController = gridDataController;
             activeBubbleSorter.Initialize(_activeBubbleEntities);
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
-            mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete);
-            bubblePool.Initialize(StartMergeSequence, queueAnimationDuration);
+            mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete, explosionHandler.ExplosionDuration);
+            bubblePool.Initialize(StartMergeSequence, queueAnimationDuration, explosionHandler.ExplosionDuration);
             explosionHandler.Initialize(_activeBubbleEntities);
         }
 

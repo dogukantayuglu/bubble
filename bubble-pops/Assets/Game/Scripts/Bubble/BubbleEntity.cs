@@ -37,12 +37,12 @@ namespace Game.Scripts.Bubble
         private bool _isConnected;
 
         public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
-            float queueAnimationDuration)
+            float queueAnimationDuration, float explosionDuration)
         {
             _bubblePool = bubblePool;
             _transform = transform;
             bubbleMovement.Initialize(queueAnimationDuration, onBubblePlacedToGrid, this);
-            bubbleAnimation.Initialize();
+            bubbleAnimation.Initialize(explosionDuration);
             bubbleVisual.Initialize();
         }
 

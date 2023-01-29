@@ -87,7 +87,7 @@ namespace Game.Scripts.Bubble
             _bubblesToDrop.Clear();
         }
 
-        public void CheckForExplosion()
+        public bool ExplosionHappened()
         {
             foreach (var activeBubblesEntity in _activeBubblesEntities)
             {
@@ -95,9 +95,11 @@ namespace Game.Scripts.Bubble
                 {
                     activeBubblesEntity.Explode();
                     CheckIntegrity();
-                    return;
+                    return true;
                 }
             }
+
+            return false;
         }
     }
 }

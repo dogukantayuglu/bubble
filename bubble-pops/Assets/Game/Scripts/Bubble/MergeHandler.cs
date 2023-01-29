@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using Game.Scripts.Enums;
 using Game.Scripts.ScriptableObjects;
 using UnityEngine;
 
@@ -16,9 +15,12 @@ namespace Game.Scripts.Bubble
         private Action _onMergeComplete;
         private List<BubbleEntity> _bubblesToCheck;
         private List<BubbleEntity> _bubblesToMerge;
+        private float _explosionDuration;
 
-        public void Initialize(List<BubbleEntity> activeBubbles, BubbleValueSo bubbleValueSo, Action onMergeComplete)
+        public void Initialize(List<BubbleEntity> activeBubbles, BubbleValueSo bubbleValueSo, Action onMergeComplete,
+            float explosionDuration)
         {
+            _explosionDuration = explosionDuration;
             _bubbleValueSo = bubbleValueSo;
             _onMergeComplete = onMergeComplete;
             _bubblesToCheck = new List<BubbleEntity>();
@@ -82,6 +84,7 @@ namespace Game.Scripts.Bubble
                     bubbleEntity.PrepareToGetMerged(mergeDuration);
                     continue;
                 }
+
                 bubbleEntity.MoveToMergePosition(mergePosition, mergeDuration);
             }
 
@@ -92,8 +95,11 @@ namespace Game.Scripts.Bubble
 
         private void RestartCheckMerge(BubbleEntity bubbleEntity)
         {
-            integrityChecker.CheckForExplosion();
-            CheckMerge(bubbleEntity);
+            if (integrityChecker.ExplosionHappened())
+                DOVirtual.DelayedCall(_explosionDuration, () => CheckMerge(bubbleEntity));
+            
+            else
+                CheckMerge(bubbleEntity);
         }
 
         private void GenerateMergeList()
