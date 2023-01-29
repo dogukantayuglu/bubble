@@ -1,3 +1,4 @@
+using Game.Scripts.Data.Game;
 using Game.Scripts.Interfaces;
 using UnityEngine;
 
@@ -12,9 +13,7 @@ namespace Game.Scripts.Data.Bubble
         private Vector3 _reflectPoint;
         private Vector3 _originPosition;
         private IBubbleThrower _bubbleThrower;
-        private const string Reflector = "Reflector";
-        private const string TopBorder = "TopBorder";
-        private const string Bubble = "Bubble";
+        
         private const float XDirectionLimit = 0.88f;
 
         public void Initialize(IBubbleThrower bubbleThrower, Vector3 originPosition)
@@ -65,11 +64,11 @@ namespace Game.Scripts.Data.Bubble
 
         private void HandleHit(RaycastHit hit, Vector3 direction)
         {
-            if (hit.collider.CompareTag(Reflector))
+            if (hit.collider.CompareTag(Tags.Reflector))
             {
                 ReflectedHit(hit, direction);
             }
-            else if(hit.collider.CompareTag(Bubble) || hit.collider.CompareTag(TopBorder))
+            else if(hit.collider.CompareTag(Tags.Bubble) || hit.collider.CompareTag(Tags.TopBorder))
             {
                 DirectHit(hit);
             }
@@ -97,7 +96,7 @@ namespace Game.Scripts.Data.Bubble
 
         private void CheckSecondReflection(RaycastHit reflectedHit)
         {
-            if (reflectedHit.collider.CompareTag(Reflector))
+            if (reflectedHit.collider.CompareTag(Tags.Reflector))
             {
                 lineRenderer.enabled = false;
                 _bubbleThrower.DeactivateGhostBubble();
