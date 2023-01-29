@@ -79,6 +79,10 @@ namespace Game.Scripts.Bubble
         {
             GridData = targetGrid;
             GridData.RegisterBubbleEntity(this);
+            
+            if(reflectPoint.y > targetGrid.Position.y)
+                reflectPoint = Vector3.zero;
+            
             bubbleMovement.GetShotToGrid(targetGrid, reflectPoint);
         }
 
