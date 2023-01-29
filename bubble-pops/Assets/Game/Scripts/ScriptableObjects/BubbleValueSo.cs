@@ -11,8 +11,7 @@ namespace Game.Scripts.ScriptableObjects
 
         public BubbleValueData GetSpawnableValue()
         {
-            // return bubbleValueDataList[Random.Range(0, 3)];
-            return bubbleValueDataList[Random.Range(3, 5)];
+            return bubbleValueDataList[Random.Range(0, 3)];
         }
 
         public BubbleValueData GetDataByValue(int value)

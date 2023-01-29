@@ -13,6 +13,8 @@ namespace Game.Scripts.Data.Bubble
         private Vector3 _originPosition;
         private IBubbleThrower _bubbleThrower;
         private const string Reflector = "Reflector";
+        private const string TopBorder = "TopBorder";
+        private const string Bubble = "Bubble";
         private const float XDirectionLimit = 0.88f;
 
         public void Initialize(IBubbleThrower bubbleThrower, Vector3 originPosition)
@@ -67,7 +69,7 @@ namespace Game.Scripts.Data.Bubble
             {
                 ReflectedHit(hit, direction);
             }
-            else
+            else if(hit.collider.CompareTag(Bubble) || hit.collider.CompareTag(TopBorder))
             {
                 DirectHit(hit);
             }

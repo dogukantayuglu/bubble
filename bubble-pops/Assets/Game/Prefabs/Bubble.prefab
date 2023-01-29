@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7769641381137890358}
   m_Layer: 0
   m_Name: Bubble
-  m_TagString: Untagged
+  m_TagString: Bubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,7 +70,6 @@ MonoBehaviour:
   fallXPositionRandomAmount: 1
   fallJumpRandomAmount: 5
   dropDuration: 1
-  explosionDuration: 1
   outerCircleLocalScale: 0.8
   outerCircleTransform: {fileID: 933900343559399009}
   spriteRenderer: {fileID: 7206970765324538236}
