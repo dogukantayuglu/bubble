@@ -86,7 +86,6 @@ namespace Game.Scripts.Bubble
             var direction = (currentPosition - originPosition).normalized;
             direction.z = 0f;
             direction *= bounceMagnitude;
-            // print($"{gameObject.name} - {direction.x} : {direction.y} : {direction.z}");
             var halfBounceDuration = bounceDuration * 0.5f;
             bubbleVisualTransform.DOLocalMove(direction, halfBounceDuration).OnComplete(() =>
             {
