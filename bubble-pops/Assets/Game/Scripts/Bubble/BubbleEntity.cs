@@ -1,14 +1,10 @@
 using System;
 using DG.Tweening;
 using Game.Scripts.Data.Bubble;
-using Game.Scripts.Data.Game;
 using Game.Scripts.Data.Grid;
 using Game.Scripts.Enums;
 using Game.Scripts.Interfaces;
-using Game.Scripts.Managers;
-using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Scripts.Bubble
 {
@@ -22,117 +18,78 @@ namespace Game.Scripts.Bubble
             set
             {
                 _isConnected = value;
-                if (_gridData == null) return;
-                if (_gridData.DebugBubbleEntity)
-                    _gridData.DebugBubbleEntity.SetIsConnected(value);
+                if (GridData == null) return;
+                if (GridData.DebugBubbleEntity)
+                    GridData.DebugBubbleEntity.SetIsConnected(value);
             }
         }
 
-        public int Value => _value;
-        public GridData GridData => _gridData;
+        public int Value { get; private set; }
+        public GridData GridData { get; private set; }
 
+        [SerializeField] private BubbleMovement bubbleMovement;
         [SerializeField] private BubbleAnimation bubbleAnimation;
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private TextMeshPro valueText;
-        [SerializeField] private float shootMovementSpeed = 15f;
-        [SerializeField] private float gridSlideAnimationDuration = 0.5f;
-        [SerializeField] private GameObject outerCircle;
-
-        [SerializeField] private float fallXPositionRandomAmount = 0.5f;
-        [SerializeField] private float fallJumpRandomAmount = 0.5f;
-        [SerializeField] private float dropDuration = 1f;
+        [SerializeField] private BubbleVisual bubbleVisual;
 
         private IBubblePool _bubblePool;
-        private Action<BubbleEntity> _onBubblePlacedToGrid;
-        private GridData _gridData;
         private Transform _transform;
-        private float _queueAnimationDuration;
-        private int _value;
         private bool _isConnected;
 
         public void Initialize(IBubblePool bubblePool, Action<BubbleEntity> onBubblePlacedToGrid,
             float queueAnimationDuration)
         {
-            if (GameManager.GridDebugMode)
-                valueText.gameObject.SetActive(false);
-
             _bubblePool = bubblePool;
-            _queueAnimationDuration = queueAnimationDuration;
-            _onBubblePlacedToGrid = onBubblePlacedToGrid;
             _transform = transform;
+            bubbleMovement.Initialize(queueAnimationDuration, onBubblePlacedToGrid, this);
             bubbleAnimation.Initialize();
+            bubbleVisual.Initialize();
         }
 
         public void ActivateOnGrid(GridActivationData gridActivationData)
         {
             SetBubbleValue(gridActivationData.BubbleValueData);
             _transform.position = gridActivationData.GridData.Position;
-            _gridData = gridActivationData.GridData;
-            _gridData.RegisterBubbleEntity(this);
+            GridData = gridActivationData.GridData;
+            GridData.RegisterBubbleEntity(this);
             gameObject.SetActive(true);
-            bubbleAnimation.PlayActivationAnimation();
+            bubbleAnimation.ActivationAnimation();
         }
 
         public void SetBubbleValue(BubbleValueData bubbleValueData)
         {
-            _value = bubbleValueData.value;
-            spriteRenderer.color = bubbleValueData.color;
-            valueText.text = $"{bubbleValueData.valueText}";
-            outerCircle.gameObject.SetActive(_value > 512);
+            Value = bubbleValueData.value;
+            bubbleVisual.SetBubbleVisual(bubbleValueData);
         }
 
         public void ActivateAtQueue(Vector3 position, bool smallSize)
         {
             _transform.position = position;
             gameObject.SetActive(true);
-            bubbleAnimation.PlayActivationAnimation(smallSize);
+            bubbleAnimation.ActivationAnimation(smallSize);
         }
 
         public void MoveToCenterPositionOnQueue(Vector3 position)
         {
-            _transform.DOScale(Vector3.one * GameData.BubbleSize, _queueAnimationDuration);
-            _transform.DOMove(position, _queueAnimationDuration);
+            bubbleMovement.MoveToCenterPositionOnQueue(position);
         }
 
         public void GetShotToGrid(GridData targetGrid, Vector3 reflectPoint)
         {
-            _gridData = targetGrid;
-            _gridData.RegisterBubbleEntity(this);
-            var targetPosition = targetGrid.Position;
-            if (reflectPoint != Vector3.zero)
-            {
-                MoveToPosition(reflectPoint).OnComplete(() =>
-                {
-                    MoveToPosition(targetPosition).OnComplete(InvokePlacedOnGridAction);
-                });
-            }
-
-            else
-            {
-                MoveToPosition(targetPosition).OnComplete(InvokePlacedOnGridAction);
-            }
+            GridData = targetGrid;
+            GridData.RegisterBubbleEntity(this);
+            bubbleMovement.GetShotToGrid(targetGrid, reflectPoint);
         }
-
-        private void InvokePlacedOnGridAction()
-        {
-            _onBubblePlacedToGrid.Invoke(this);
-        }
-
-        private Tween MoveToPosition(Vector3 position)
-        {
-            return _transform.DOMove(position, shootMovementSpeed).SetSpeedBased();
-        }
-
+        
         public void ReAlignToGridPosition()
         {
-            if (_gridData == null) return;
-            _transform.DOMove(_gridData.Position, gridSlideAnimationDuration);
+            if (GridData == null) return;
+            bubbleMovement.ReAlignToGridPosition(GridData.Position);
         }
 
-        public void MergeToPosition(Vector3 targetPosition, float duration)
+        public void MoveToMergePosition(Vector3 targetPosition, float duration)
         {
             DetachFromGridData();
-            _transform.DOMove(targetPosition, duration).OnComplete(ReturnToPool);
+            bubbleMovement.MoveToMergePosition(targetPosition, duration).OnComplete(ReturnToPool);
         }
 
         private void ReturnToPool()
@@ -143,12 +100,7 @@ namespace Game.Scripts.Bubble
         public void DropFromGrid()
         {
             DetachFromGridData();
-            var currentPosition = _transform.position;
-            var randomXTarget = currentPosition.x +
-                                Random.Range(-fallXPositionRandomAmount, fallXPositionRandomAmount);
-            var randomJumpPower = Random.Range(0, fallJumpRandomAmount);
-            var targetPosition = new Vector3(randomXTarget, -6, currentPosition.z);
-            _transform.DOJump(targetPosition, randomJumpPower, 1, dropDuration).OnComplete(ReturnToPool);
+            bubbleAnimation.DropAnimation().OnComplete(ReturnToPool);
         }
 
         public void OnGridDestroyed()
@@ -159,22 +111,22 @@ namespace Game.Scripts.Bubble
 
         private void DetachFromGridData()
         {
-            _gridData.OccupationState = GridOccupationStates.Free;
-            _gridData.UnRegisterBubbleEntity(this);
-            _gridData = null;
+            GridData.OccupationState = GridOccupationStates.Free;
+            GridData.UnRegisterBubbleEntity(this);
+            GridData = null;
             OnBubbleDetachedFromGrid?.Invoke(this);
         }
 
         [ContextMenu("PrintGridData")]
         public void PrintGridData()
         {
-            print($"{_gridData.Row} {_gridData.Column}");
-            print($"{_gridData.BubbleEntity}");
-            print($"_IsConnected: {_gridData.BubbleEntity.IsConnectedToGrid}");
-            print($"{_gridData.OccupationState}");
-            foreach (var data in _gridData.NeighbourGridDataList)
+            print($"{GridData.Row} {GridData.Column}");
+            print($"{GridData.BubbleEntity}");
+            print($"_IsConnected: {GridData.BubbleEntity.IsConnectedToGrid}");
+            print($"{GridData.OccupationState}");
+            foreach (var data in GridData.NeighbourGridDataList)
             {
-                print("Neighbour");
+                print("-----Neighbour-----");
                 print($"{data.Row} {data.Column}");
                 if (data.BubbleEntity)
                 {
@@ -182,7 +134,6 @@ namespace Game.Scripts.Bubble
                     print($"_IsConnected: {data.BubbleEntity.IsConnectedToGrid}");
                 }
                 print($"{data.OccupationState}");
-                print("------------------");
             }
         }
     }
