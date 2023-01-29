@@ -62,6 +62,21 @@ namespace Game.Scripts.Bubble
         {
             return _transform.DOMove(targetPosition, duration);
         }
+        
+        public void ComeForward(float duration)
+        {
+            var position = _transform.position;
+            position.z = -0.001f;
+            _transform.position = position;
+            DOVirtual.DelayedCall(duration, GetBackToZeroZPosition);
+        }
+
+        private void GetBackToZeroZPosition()
+        {
+            var position = _transform.position;
+            position.z = 0f;
+            _transform.position = position;
+        }
 
         private void InvokePlacedOnGridAction()
         {

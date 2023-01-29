@@ -99,6 +99,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7206970765324538236}
   valueText: {fileID: 7206970766163943242}
   outerCircle: {fileID: 7528654382350703993}
+  fadeOutTarget: 0.2
 --- !u!212 &7206970765324538236
 SpriteRenderer:
   m_ObjectHideFlags: 0

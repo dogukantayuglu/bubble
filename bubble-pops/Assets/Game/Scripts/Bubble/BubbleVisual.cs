@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Game.Scripts.Data.Bubble;
 using Game.Scripts.Managers;
 using TMPro;
@@ -21,7 +22,14 @@ namespace Game.Scripts.Bubble
         {
             spriteRenderer.color = bubbleValueData.color;
             valueText.text = $"{bubbleValueData.valueText}";
+            valueText.DOFade(1, 0.1f);
             outerCircle.gameObject.SetActive(bubbleValueData.value > 512);
+        }
+
+        public void FadeOut(float duration)
+        {
+            spriteRenderer.DOFade(0.5f, duration);
+            valueText.DOFade(0, duration - (duration * 0.5f));
         }
     }
 }

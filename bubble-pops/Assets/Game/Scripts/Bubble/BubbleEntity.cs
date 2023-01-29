@@ -90,6 +90,12 @@ namespace Game.Scripts.Bubble
         {
             DetachFromGridData();
             bubbleMovement.MoveToMergePosition(targetPosition, duration).OnComplete(ReturnToPool);
+            bubbleVisual.FadeOut(duration);
+        }
+        
+        public void PrepareToGetMerged(float duration)
+        {
+            bubbleMovement.ComeForward(duration);
         }
 
         private void ReturnToPool()

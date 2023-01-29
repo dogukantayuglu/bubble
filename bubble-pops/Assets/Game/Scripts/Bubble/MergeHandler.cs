@@ -77,7 +77,11 @@ namespace Game.Scripts.Bubble
 
             foreach (var bubbleEntity in _bubblesToMerge)
             {
-                if (bubbleEntity.Equals(bubbleToMerge)) continue;
+                if (bubbleEntity.Equals(bubbleToMerge))
+                {
+                    bubbleEntity.PrepareToGetMerged(mergeDuration);
+                    continue;
+                }
                 bubbleEntity.MoveToMergePosition(mergePosition, mergeDuration);
             }
 
