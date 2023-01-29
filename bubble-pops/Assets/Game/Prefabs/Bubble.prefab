@@ -70,6 +70,12 @@ MonoBehaviour:
   fallXPositionRandomAmount: 1
   fallJumpRandomAmount: 5
   dropDuration: 1
+  explosionDuration: 1
+  outerCircleLocalScale: 0.8
+  outerCircleTransform: {fileID: 933900343559399009}
+  spriteRenderer: {fileID: 7206970765324538236}
+  affectedAnimationDuration: 0.7
+  movementMultiplier: 1.4
 --- !u!114 &2676582952788435277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,7 +105,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7206970765324538236}
   valueText: {fileID: 7206970766163943242}
   outerCircle: {fileID: 7528654382350703993}
-  fadeOutTarget: 0.2
 --- !u!212 &7206970765324538236
 SpriteRenderer:
   m_ObjectHideFlags: 0

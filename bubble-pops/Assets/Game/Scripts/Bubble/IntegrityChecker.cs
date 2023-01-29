@@ -86,5 +86,18 @@ namespace Game.Scripts.Bubble
             
             _bubblesToDrop.Clear();
         }
+
+        public void CheckForExplosion()
+        {
+            foreach (var activeBubblesEntity in _activeBubblesEntities)
+            {
+                if (activeBubblesEntity.Value >= 2048)
+                {
+                    activeBubblesEntity.Explode();
+                    CheckIntegrity();
+                    return;
+                }
+            }
+        }
     }
 }

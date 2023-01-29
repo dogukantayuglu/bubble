@@ -11,6 +11,7 @@ namespace Game.Scripts.Bubble
     public class BubbleEntity : MonoBehaviour
     {
         public Action<BubbleEntity> OnBubbleDetachedFromGrid;
+        public Action<BubbleEntity> OnBubbleExploded;
 
         public bool IsConnectedToGrid
         {
@@ -96,6 +97,19 @@ namespace Game.Scripts.Bubble
         public void PrepareToGetMerged(float duration)
         {
             bubbleMovement.ComeForward(duration);
+        }
+
+        public void Explode()
+        {
+            bubbleAnimation.PlayExplodeAnimation().OnComplete(ReturnToPool);
+            OnBubbleExploded?.Invoke(this);
+            DetachFromGridData();
+        }
+        
+        public void GetAffectedFromExplosion(Vector3 explosionOrigin)
+        {
+            DetachFromGridData();
+            bubbleAnimation.PlayAffectionFromExplosionAnimation(explosionOrigin).OnComplete(ReturnToPool);
         }
 
         private void ReturnToPool()

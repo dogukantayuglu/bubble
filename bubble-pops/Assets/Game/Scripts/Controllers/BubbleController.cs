@@ -16,6 +16,7 @@ namespace Game.Scripts.Controllers
         [SerializeField] private MergeHandler mergeHandler;
         [SerializeField] private BubblePool bubblePool;
         [SerializeField] private BubbleThrower bubbleThrower;
+        [SerializeField] private ExplosionHandler explosionHandler;
         [SerializeField] private ActiveBubbleSorter activeBubbleSorter;
         [SerializeField] private BubbleValueSo bubbleValueSo;
         [SerializeField] private float massBubbleGenerationInterval = 0.1f;
@@ -32,7 +33,7 @@ namespace Game.Scripts.Controllers
             bubbleThrower.Initialize(this, gridDataController, queueAnimationDuration);
             mergeHandler.Initialize(_activeBubbleEntities, bubbleValueSo, MergeCheckComplete);
             bubblePool.Initialize(StartMergeSequence, queueAnimationDuration);
-            bubblePool.OnBubbleDetachedFromGrid += RemoveBubbleFromActiveList;
+            explosionHandler.Initialize(_activeBubbleEntities);
         }
 
         public void ActivateInitThrowBubbles()
@@ -53,7 +54,7 @@ namespace Game.Scripts.Controllers
                 sequence.AppendCallback(() => GenerateBubbleAtEmptyGrid(randomGridData));
                 sequence.AppendInterval(massBubbleGenerationInterval);
             }
-            
+
             sequence.AppendCallback(activeBubbleSorter.Sort);
         }
 
@@ -68,14 +69,14 @@ namespace Game.Scripts.Controllers
                 gridData.OccupationState = GridOccupationStates.Occupied;
                 gridData = _gridDataController.GetFreeGridData();
             }
-            
+
             return gridDataList;
         }
 
         private void GenerateBubbleAtEmptyGrid(GridData gridData)
         {
             var bubbleEntity = bubblePool.GetBubbleFromPool();
-            _activeBubbleEntities.Add(bubbleEntity);
+            AddBubbleToActiveList(bubbleEntity);
 
             var bubbleActivationData = new GridActivationData(
                 gridData,
@@ -98,21 +99,21 @@ namespace Game.Scripts.Controllers
                 gridData.OccupationState = GridOccupationStates.Occupied;
                 GenerateBubbleAtEmptyGrid(gridData);
             }
-            
+
             activeBubbleSorter.Sort();
             gridDataList.Clear();
         }
 
         private void StartMergeSequence(BubbleEntity bubbleEntity)
         {
-            _activeBubbleEntities.Add(bubbleEntity);
+            AddBubbleToActiveList(bubbleEntity);
             mergeHandler.CheckMerge(bubbleEntity);
         }
 
         private void MergeCheckComplete()
         {
             _gridDataController.CheckGridPopulation();
-            
+
             foreach (var activeBubbleEntity in _activeBubbleEntities)
             {
                 activeBubbleEntity.ReAlignToGridPosition();
@@ -121,14 +122,34 @@ namespace Game.Scripts.Controllers
             DOVirtual.DelayedCall(queueAnimationDuration + 0.1f, bubbleThrower.PrepareForThrow);
         }
 
+        private void HandleBubbleExplosion(BubbleEntity explodedBubbleEntity)
+        {
+            explosionHandler.HandleBubbleExplosion(explodedBubbleEntity);
+        }
+
+        private void AddBubbleToActiveList(BubbleEntity bubbleEntity)
+        {
+            bubbleEntity.OnBubbleDetachedFromGrid += RemoveBubbleFromActiveList;
+            bubbleEntity.OnBubbleExploded += HandleBubbleExplosion;
+
+            _activeBubbleEntities.Add(bubbleEntity);
+        }
+
         private void RemoveBubbleFromActiveList(BubbleEntity bubbleEntity)
         {
+            bubbleEntity.OnBubbleDetachedFromGrid -= RemoveBubbleFromActiveList;
+            bubbleEntity.OnBubbleExploded -= bubbleEntity.OnBubbleExploded;
+
             _activeBubbleEntities.Remove(bubbleEntity);
         }
 
         private void OnDisable()
         {
-            bubblePool.OnBubbleDetachedFromGrid -= RemoveBubbleFromActiveList;
+            foreach (var activeBubbleEntity in _activeBubbleEntities)
+            {
+                activeBubbleEntity.OnBubbleDetachedFromGrid -= RemoveBubbleFromActiveList;
+                activeBubbleEntity.OnBubbleExploded -= HandleBubbleExplosion;
+            }
         }
     }
 }

@@ -7,8 +7,6 @@ namespace Game.Scripts.Bubble
 {
     public class BubblePool : MonoBehaviour, IBubblePool
     {
-        public Action<BubbleEntity> OnBubbleDetachedFromGrid;
-        
         [SerializeField] private BubbleEntity bubbleEntityPrefab;
         [SerializeField] private int poolCount;
 
@@ -27,7 +25,6 @@ namespace Game.Scripts.Bubble
             {
                 var bubbleEntity = Instantiate(bubbleEntityPrefab, Vector3.zero, Quaternion.identity, poolTransform);
                 bubbleEntity.Initialize(this, onBubblePlacedToGrid, queueAnimationDuration);
-                bubbleEntity.OnBubbleDetachedFromGrid += NotifyBubbleDetachedFromGrid;
                 var bubbleGameObject = bubbleEntity.gameObject;
                 bubbleGameObject.SetActive(false);
                 bubbleGameObject.name = $"Bubble {i + 1}";
@@ -46,11 +43,6 @@ namespace Game.Scripts.Bubble
             bubbleEntity.gameObject.SetActive(false);
             bubbleEntity.transform.position = Vector3.zero;
             _bubblePool.Push(bubbleEntity);
-        }
-
-        private void NotifyBubbleDetachedFromGrid(BubbleEntity bubbleEntity)
-        {
-            OnBubbleDetachedFromGrid?.Invoke(bubbleEntity);
         }
     }
 }

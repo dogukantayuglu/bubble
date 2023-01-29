@@ -87,9 +87,14 @@ namespace Game.Scripts.Bubble
 
             integrityChecker.CheckIntegrity();
             DOVirtual.DelayedCall(mergeDuration + mergeDuration * 0.1f,
-                () => CheckMerge(bubbleToMerge));
+                () => RestartCheckMerge(bubbleToMerge));
         }
 
+        private void RestartCheckMerge(BubbleEntity bubbleEntity)
+        {
+            integrityChecker.CheckForExplosion();
+            CheckMerge(bubbleEntity);
+        }
 
         private void GenerateMergeList()
         {

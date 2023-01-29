@@ -6,11 +6,23 @@ namespace Game.Scripts.Bubble
 {
     public class BubbleAnimation : MonoBehaviour
     {
+        [Header("Activation")]
         [SerializeField] private float activationAnimationDuration = 0.5f;
 
+        [Header("Fall")]
         [SerializeField] private float fallXPositionRandomAmount = 1f;
         [SerializeField] private float fallJumpRandomAmount = 5f;
         [SerializeField] private float dropDuration = 1f;
+
+        [Header("Explode")] 
+        [SerializeField] private float explosionDuration = 0.8f;
+        [SerializeField] private float outerCircleLocalScale = 1f;
+        [SerializeField] private Transform outerCircleTransform;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+
+        [Header("DestroyByExplosion")] 
+        [SerializeField] private float affectedAnimationDuration = 0.7f;
+        [SerializeField] private float movementMultiplier = 1.4f;
 
         private Transform _transform;
 
@@ -34,6 +46,21 @@ namespace Game.Scripts.Bubble
             var randomJumpPower = Random.Range(0, fallJumpRandomAmount);
             var targetPosition = new Vector3(randomXTarget, -6, currentPosition.z);
             return _transform.DOJump(targetPosition, randomJumpPower, 1, dropDuration);
+        }
+
+        public Tween PlayExplodeAnimation()
+        {
+            spriteRenderer.DOFade(0f, explosionDuration); 
+            return outerCircleTransform.DOScale(Vector3.one * outerCircleLocalScale, explosionDuration);
+        }
+
+        public Tween PlayAffectionFromExplosionAnimation(Vector3 explosionOrigin)
+        {
+            var currentPosition = _transform.position;
+            var direction = (currentPosition - explosionOrigin).normalized;
+            var targetPosition = currentPosition + (direction * movementMultiplier);
+            _transform.DOMove(targetPosition, affectedAnimationDuration).SetEase(Ease.OutCirc);
+            return _transform.DOScale(Vector3.zero, affectedAnimationDuration);
         }
     }
 }
