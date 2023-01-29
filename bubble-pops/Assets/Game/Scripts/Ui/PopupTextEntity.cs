@@ -11,47 +11,40 @@ namespace Game.Scripts.Ui
         [SerializeField] private TextMeshProUGUI textMeshProUGUI;
 
         [Header("Animation Values")] [SerializeField]
-        private float anchoredStartPosition = -45f;
-        [SerializeField] private float verticalMovementSpeed = 50f;
-        [SerializeField] private float movementYTarget = 350f;
+        private float targetScale = 2f;
+
         [SerializeField] private float animationDuration = 1f;
+        [Range(0f, 1f)]
+        [SerializeField] private float fadeOutDurationPercentage = 0.4f;
 
         private Action<PopupTextEntity> _returnToPoolAction;
 
         public void Initialize(Action<PopupTextEntity> returnToPoolAction)
         {
             _returnToPoolAction = returnToPoolAction;
-            Reset();
-        }
-
-        private void Reset()
-        {
-            ResetPosition();
             gameObject.SetActive(false);
         }
 
-        private void ResetPosition()
-        {
-            var position = rectTransform.anchoredPosition;
-            position.x = 0f;
-            position.y = anchoredStartPosition;
-            rectTransform.anchoredPosition = position;
-        }
 
         public void PlayTextAnimation(string text)
         {
             textMeshProUGUI.DOFade(1, 0);
             textMeshProUGUI.text = text;
             gameObject.SetActive(true);
-            rectTransform.DOAnchorPosY(movementYTarget, verticalMovementSpeed).SetEase(Ease.OutCirc)
-                .SetSpeedBased();
-            textMeshProUGUI.DOFade(0, animationDuration).OnComplete(StopAnimation);
+            rectTransform.DOScale(targetScale, animationDuration);
+            DOVirtual.DelayedCall(animationDuration * (1 - fadeOutDurationPercentage), FadeOut);
+        }
+
+        private void FadeOut()
+        {
+            textMeshProUGUI.DOFade(0, animationDuration * fadeOutDurationPercentage).OnComplete(StopAnimation);
         }
 
         public void StopAnimation()
         {
             rectTransform.DOKill();
-            Reset();
+            gameObject.SetActive(false);
+            rectTransform.localScale = Vector3.one;
             _returnToPoolAction.Invoke(this);
         }
     }
