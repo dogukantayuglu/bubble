@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Game.Scripts.Ui;
 using UnityEngine;
 
@@ -8,11 +7,8 @@ namespace Game.Scripts.Controllers
     {
         [SerializeField] private PopupTextPool popupTextPool;
 
-        private List<PopupTextEntity> _activePopupTexts;
-
         public void Initialize()
         {
-            _activePopupTexts = new List<PopupTextEntity>();
             popupTextPool.Initialize();
         }
 
