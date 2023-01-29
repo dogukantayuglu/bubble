@@ -122,25 +122,5 @@ namespace Game.Scripts.Bubble
             GridData = null;
             OnBubbleDetachedFromGrid?.Invoke(this);
         }
-
-        [ContextMenu("PrintGridData")]
-        public void PrintGridData()
-        {
-            print($"{GridData.Row} {GridData.Column}");
-            print($"{GridData.BubbleEntity}");
-            print($"_IsConnected: {GridData.BubbleEntity.IsConnectedToGrid}");
-            print($"{GridData.OccupationState}");
-            foreach (var data in GridData.NeighbourGridDataList)
-            {
-                print("-----Neighbour-----");
-                print($"{data.Row} {data.Column}");
-                if (data.BubbleEntity)
-                {
-                    print($"{data.BubbleEntity}");
-                    print($"_IsConnected: {data.BubbleEntity.IsConnectedToGrid}");
-                }
-                print($"{data.OccupationState}");
-            }
-        }
     }
 }
