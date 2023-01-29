@@ -36,6 +36,7 @@ namespace Game.Scripts.Bubble
         [SerializeField] private TextMeshPro valueText;
         [SerializeField] private float shootMovementSpeed = 15f;
         [SerializeField] private float gridSlideAnimationDuration = 0.5f;
+        [SerializeField] private GameObject outerCircle;
 
         [SerializeField] private float fallXPositionRandomAmount = 0.5f;
         [SerializeField] private float fallJumpRandomAmount = 0.5f;
@@ -77,6 +78,7 @@ namespace Game.Scripts.Bubble
             _value = bubbleValueData.value;
             spriteRenderer.color = bubbleValueData.color;
             valueText.text = $"{bubbleValueData.valueText}";
+            outerCircle.gameObject.SetActive(_value > 512);
         }
 
         public void ActivateAtQueue(Vector3 position, bool smallSize)
