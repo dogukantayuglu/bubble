@@ -1751,6 +1751,7 @@ MonoBehaviour:
   maxQueueCount: 2
   ghostBubbleHandler: {fileID: 1866197631}
   aimHandler: {fileID: 1887016900}
+  bubbleValueSo: {fileID: 11400000, guid: d518199651a38c24092f3874fae61058, type: 2}
 --- !u!1 &2143375432
 GameObject:
   m_ObjectHideFlags: 0

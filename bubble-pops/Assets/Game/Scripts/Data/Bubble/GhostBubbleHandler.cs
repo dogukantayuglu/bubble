@@ -26,10 +26,10 @@ namespace Game.Scripts.Data.Bubble
             _ghostBubbleEntity.Initialize();
         }
         
-        public void ActivateGhostBubble(RaycastHit hit)
+        public void ActivateGhostBubble(RaycastHit hit, Color color)
         {
             var closestGridData = _gridDataController.GetClosestFreeGridData(hit.point);
-            _ghostBubbleEntity.ActivateAtGrid(closestGridData);
+            _ghostBubbleEntity.ActivateAtGrid(closestGridData, color);
         }
         
         public void DeactivateGhostBubble()

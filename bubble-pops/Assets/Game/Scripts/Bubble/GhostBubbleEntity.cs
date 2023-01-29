@@ -17,10 +17,14 @@ namespace Game.Scripts.Bubble
         }
 
         [SerializeField] private float animationDuration = 0.5f;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [Range(0.1f, 1f)]
+        [SerializeField] private float opacity = 0.3f;
 
         private Transform _transform;
         private GhostBubbleStates _currentState;
         private GridData _currentGridData;
+        private Color _targetColor;
 
         public void Initialize()
         {
@@ -29,25 +33,38 @@ namespace Game.Scripts.Bubble
             _transform.localScale = Vector3.zero;
         }
 
-        public void ActivateAtGrid(GridData gridData)
+        public void ActivateAtGrid(GridData gridData, Color color)
         {
             if (gridData.Equals(_currentGridData)) return;
             if (_currentState.Equals(GhostBubbleStates.Deactivating)) return;
             if (_currentState.Equals(GhostBubbleStates.Activating)) return;
 
+            SetTargetColor(color);
             if (_currentState.Equals(GhostBubbleStates.Active))
             {
-                ChangeForPositionChange(gridData);
+                DeactivateForPositionChange(gridData);
                 return;
             }
 
+            SetColor();
             _currentState = GhostBubbleStates.Activating;
             _currentGridData = gridData;
             _transform.position = gridData.Position;
             _transform.DOScale(Vector3.one * GameData.BubbleSize, animationDuration).OnComplete(SetStateActive);
         }
 
-        private void ChangeForPositionChange(GridData gridData)
+        private void SetColor()
+        {
+            spriteRenderer.color = _targetColor;
+        }
+
+        private void SetTargetColor(Color color)
+        {
+            color.a = opacity;
+            _targetColor = color;
+        }
+
+        private void DeactivateForPositionChange(GridData gridData)
         {
             _currentState = GhostBubbleStates.Deactivating;
             _transform.DOScale(Vector3.zero, animationDuration).OnComplete(() => ChangePosition(gridData));
@@ -74,7 +91,7 @@ namespace Game.Scripts.Bubble
         private void ChangePosition(GridData gridData)
         {
             _currentState = GhostBubbleStates.Inactive;
-            ActivateAtGrid(gridData);
+            ActivateAtGrid(gridData, _targetColor);
         }
     }
 }

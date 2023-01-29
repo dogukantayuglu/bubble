@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationDuration: 0.1
+  spriteRenderer: {fileID: 7206970765324538236}
+  opacity: 0.745
 --- !u!212 &7206970765324538236
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using Game.Scripts.Bubble;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Enums;
 using Game.Scripts.Interfaces;
+using Game.Scripts.ScriptableObjects;
 using UnityEngine;
 
 namespace Game.Scripts.Data.Bubble
@@ -14,12 +15,14 @@ namespace Game.Scripts.Data.Bubble
         [SerializeField] private int maxQueueCount = 2;
         [SerializeField] private GhostBubbleHandler ghostBubbleHandler;
         [SerializeField] private AimHandler aimHandler;
+        [SerializeField] private BubbleValueSo bubbleValueSo;
 
         private float _queueAnimationDuration;
         private Queue<BubbleEntity> _bubblesInQueue;
         private Vector3 _queueStartPosition;
         private IBubbleBuffer _bubbleBuffer;
         private bool _canThrow;
+        private Color _currentColor;
 
         public void Initialize(IBubbleBuffer bubbleBuffer, IGridDataController gridDataController, float queueAnimDuration)
         {
@@ -42,6 +45,8 @@ namespace Game.Scripts.Data.Bubble
                 _bubblesInQueue.Enqueue(bubbleEntity);
                 bubbleEntity.ActivateAtQueue(position, i != 0);
             }
+
+            _currentColor = bubbleValueSo.GetColorByValue(_bubblesInQueue.Peek().Value);
         }
 
         public void ThrowBubble(Vector3 reflectPoint)
@@ -58,6 +63,7 @@ namespace Game.Scripts.Data.Bubble
         {
             var bubbleEntity = _bubblesInQueue.Peek();
             bubbleEntity.MoveToCenterPositionOnQueue(_queueStartPosition);
+            _currentColor = bubbleValueSo.GetColorByValue(bubbleEntity.Value);
             AddItemToQueue();
         }
 
@@ -72,7 +78,7 @@ namespace Game.Scripts.Data.Bubble
 
         public void ActivateGhostBubble(RaycastHit hit)
         {
-            ghostBubbleHandler.ActivateGhostBubble(hit);
+            ghostBubbleHandler.ActivateGhostBubble(hit, _currentColor);
         }
 
         public void DeactivateGhostBubble()

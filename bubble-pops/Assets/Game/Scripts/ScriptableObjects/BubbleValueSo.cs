@@ -14,6 +14,12 @@ namespace Game.Scripts.ScriptableObjects
             return bubbleValueDataList[Random.Range(0, 3)];
         }
 
+        public Color GetColorByValue(int value)
+        {
+            var bubbleValueData = GetDataByValue(value);
+            return bubbleValueData?.color ?? Color.black;
+        }
+
         public BubbleValueData GetDataByValue(int value)
         {
             foreach (var bubbleValueData in bubbleValueDataList)
