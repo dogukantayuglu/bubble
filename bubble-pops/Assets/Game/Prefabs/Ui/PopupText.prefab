@@ -61,7 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 5251872508691509345}
   textMeshProUGUI: {fileID: 5251872508691509344}
-  targetScale: 2
+  targetScale: 3
   animationDuration: 1
   fadeOutDurationPercentage: 0.3
 --- !u!114 &5251872508691509344
